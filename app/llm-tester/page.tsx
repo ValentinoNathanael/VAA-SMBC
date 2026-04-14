@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { SmartAnswerDisplay } from "./SmartAnswerDisplay";
 
 type TestResult = {
   id: number;
@@ -338,13 +339,7 @@ async function handleVerdict(verdict: "pass" | "fail") {
                 <label style={{ fontSize: 12, fontWeight: 700, color: "#4A6A56", textTransform: "uppercase" as const, letterSpacing: "0.08em" }}>
                   Jawaban AI
                 </label>
-                <div style={{
-                  marginTop: 10, background: "#F7F8F5", border: "1px solid #D4E8C2",
-                  borderRadius: 10, padding: "12px 14px", fontSize: 13, color: "#1A4731",
-                  whiteSpace: "pre-wrap" as const, lineHeight: 1.7, maxHeight: 300, overflowY: "auto" as const,
-                }}>
-                  {answer}
-                </div>
+                  <SmartAnswerDisplay answer={answer} />
               </div>
             )}
 
