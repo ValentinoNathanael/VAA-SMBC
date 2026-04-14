@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: vaa_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: vaa_user
+      POSTGRES_PASSWORD: vaa_pass
+      POSTGRES_DB: vaa_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - vaa_pgdata:/var/lib/postgresql/data
+
+  minio:
+    image: minio/minio:latest
+    container_name: vaa_minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - vaa_miniodata:/data
+
+volumes:
+  vaa_pgdata:
+  vaa_miniodata:
