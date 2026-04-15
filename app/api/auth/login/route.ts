@@ -8,7 +8,7 @@ export async function POST(req: Request) {
 
   if (role === "internal") {
     if (!password) {
-      return NextResponse.json({ ok: false, error: "Password wajib diisi" }, { status: 400 });
+      return NextResponse.json({ ok: false, error: "Password is required" }, { status: 400 });
     }
     const result = await pool.query("SELECT password_hash FROM internal_auth LIMIT 1");
     if (result.rows.length === 0) {
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     }
     const isValid = await bcrypt.compare(password, result.rows[0].password_hash);
     if (!isValid) {
-      return NextResponse.json({ ok: false, error: "Password salah" }, { status: 401 });
+      return NextResponse.json({ ok: false, error: "Incorrect password" }, { status: 401 });
     }
     const res = NextResponse.json({ ok: true, role: "internal" });
     res.cookies.set("vaa_role", "internal", { httpOnly: true, path: "/" });
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
 
   if (role === "spoc") {
     if (!password) {
-      return NextResponse.json({ ok: false, error: "Password wajib diisi" }, { status: 400 });
+      return NextResponse.json({ ok: false, error: "Password is required" }, { status: 400 });
     }
 
     // Ambil password hash dari DB
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
     const isValid = await bcrypt.compare(password, password_hash);
 
     if (!isValid) {
-      return NextResponse.json({ ok: false, error: "Password salah" }, { status: 401 });
+      return NextResponse.json({ ok: false, error: "Incorrect password" }, { status: 401 });
     }
 
     const res = NextResponse.json({ ok: true, role: "spoc" });

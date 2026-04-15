@@ -383,7 +383,7 @@ export default function ChatHistoryPage() {
         <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#FFFBEB", border: "1px solid #FCD34D", borderRadius: 10, padding: "8px 14px", marginBottom: 16 }}>
           <span style={{ fontSize: 14 }}>⏱️</span>
           <p style={{ fontSize: 12, color: "#92400E", margin: 0 }}>
-            Chat history is automatically deleted after <strong>20 seconds</strong> Conversation history is temporary.
+            Chat history is automatically deleted after <strong>20 - 55 seconds</strong> Conversation history is temporary.
           </p>
         </div>
 

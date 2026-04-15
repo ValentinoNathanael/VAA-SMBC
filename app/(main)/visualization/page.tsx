@@ -329,7 +329,7 @@ return (
               borderRadius: 8,
               padding: "8px 12px"
             }}>
-              ⚠️ Comparison Column menghasilkan <strong>{barKeys.length} kategori unik</strong> — chart mungkin tidak terbaca dengan baik. Disarankan pilih kolom dengan nilai yang lebih sedikit (contoh: Status, LOB, Deployment Type).
+              ⚠️ Comparison Column produces <strong>{barKeys.length} unique categories</strong> the chart may be hard to read. It is recommended to select a column with fewer values (e.g., Status, LOB, Deployment Type).`
             </p>
           )}
         </div>
@@ -427,20 +427,20 @@ return (
       <div className="mt-6 rounded-2xl bg-white p-5 shadow-sm" style={{ border: "1px solid #D4E8C2" }}>
         {bridgeData.length === 0 ? (
           <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-            Kolom Waterfall tidak lengkap / tidak ada data valid.
-            {!liveKey && <span className="block mt-1">• Kolom Date_Live / Date_LIve tidak ditemukan</span>}
-            {!decomKey && <span className="block mt-1">• Kolom Date_Decom tidak ditemukan</span>}
-            {!statusKey && <span className="block mt-1">• Kolom Status tidak ditemukan</span>}
+            There is no valid data.
+            {!liveKey && <span className="block mt-1">• Date_LIve not found</span>}
+            {!decomKey && <span className="block mt-1">• Date_Decom column not found</span>}
+            {!statusKey && <span className="block mt-1">• Status column not found</span>}
           </div>
         ) : (
           <>
             <div className="mb-4">
-              <h2 className="text-lg font-semibold text-black">Perubahan Total Aplikasi per Tahun</h2>
-              <p className="text-sm text-zinc-500">Chart ini menunjukkan penambahan aplikasi baru, pengurangan karena decommission, dan total aplikasi pada akhir setiap tahun.</p>
+              <h2 className="text-lg font-semibold text-black">Total Application Change per Year</h2>
+              <p className="text-sm text-zinc-500">This chart shows new application additions, reductions due to decommissioning, and the total number of applications at the end of each year.</p>
             </div>
             <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-4">
               <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
-                <div className="text-xs text-zinc-500">Rentang Tahun</div>
+                <div className="text-xs text-zinc-500">Year Range</div>
                 <div className="text-lg font-semibold text-black">{bridgeData[0]?.year} - {bridgeData[bridgeData.length - 1]?.year}</div>
               </div>
               <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
@@ -452,23 +452,23 @@ return (
                 <div className="text-lg font-semibold text-red-600">{bridgeData.reduce((s, i) => s + Math.abs(Number(i.minus) || 0), 0)}</div>
               </div>
               <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
-                <div className="text-xs text-zinc-500">Total Aplikasi Terakhir</div>
+                <div className="text-xs text-zinc-500">Total Applications (End of Period)</div>
                 <div className="text-lg font-semibold text-blue-600">{bridgeData[bridgeData.length - 1]?.total ?? 0}</div>
               </div>
             </div>
             <div className="mb-4 rounded-xl border border-blue-100 bg-blue-50 p-4">
-              <div className="mb-2 text-sm font-semibold text-blue-900">Cara membaca chart ini</div>
+              <div className="mb-2 text-sm font-semibold text-blue-900">How to read this chart</div>
               <div className="grid gap-2 text-sm text-blue-900 md:grid-cols-2">
-                <div>• Batang hijau menunjukkan jumlah aplikasi baru per tahun.</div>
-                <div>• Batang merah menunjukkan jumlah aplikasi yang di-decommission.</div>
-                <div>• Batang biru menunjukkan total aplikasi di akhir tahun tersebut.</div>
-                <div>• Baca chart dari kiri ke kanan sesuai urutan tahun.</div>
+                <div>• The green bars show the number of new applications per year.</div>
+                <div>• The red bar shows the number of applications that were decommissioned..</div>
+                <div>• The blue bar shows the total applications at the end of that year..</div>
+                <div>• Read the chart from left to right in year order..</div>
               </div>
             </div>
             <div className="mb-4 rounded-xl border border-zinc-200 bg-zinc-50 p-3">
-              <div className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-500">Keterangan Warna</div>
+              <div className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-500">Color Description</div>
               <div className="flex flex-wrap gap-4 text-sm text-zinc-700">
-                <div className="flex items-center gap-2"><span className="inline-block h-3 w-3 rounded-sm bg-blue-600" /><span>Total Aplikasi (akhir tahun)</span></div>
+                <div className="flex items-center gap-2"><span className="inline-block h-3 w-3 rounded-sm bg-blue-600" /><span>Total Applications (End of Year)</span></div>
                 <div className="flex items-center gap-2"><span className="inline-block h-3 w-3 rounded-sm bg-green-600" /><span>New</span></div>
                 <div className="flex items-center gap-2"><span className="inline-block h-3 w-3 rounded-sm bg-red-600" /><span>Decommissioned</span></div>
               </div>
@@ -485,10 +485,10 @@ return (
                       const v = Number(val ?? 0);
                       if (name === "minus") return [String(Math.abs(v)), "Decommissioned"];
                       if (name === "plus") return [String(v), "New"];
-                      if (name === "total") return [String(v), "Total Aplikasi"];
+                      if (name === "total") return [String(v), "Total Applications"];
                       return [String(v), name];
                     }} />
-                  <Bar dataKey="total" name="Total Aplikasi" fill="#2563EB" radius={[4, 4, 0, 0]}
+                  <Bar dataKey="total" name="Total Applications" fill="#2563EB" radius={[4, 4, 0, 0]}
                     label={(props: any) => {
                       const { x, y, width, height, value } = props;
                       const v = Number(value ?? 0);
@@ -502,7 +502,7 @@ return (
                 </BarChart>
               </ResponsiveContainer>
             </div>
-            <div className="mt-3 text-xs text-zinc-500">Hover pada batang untuk melihat detail jumlah New, Decommissioned, dan Total Aplikasi.</div>
+            <div className="mt-3 text-xs text-zinc-500">Hover on the bar to see details of the number of New, Decommissioned, and Total Applications.</div>
           </>
         )}
       </div>

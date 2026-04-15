@@ -66,18 +66,18 @@ useEffect(() => {
           🔒
         </div>
         <h2 style={{ fontSize: 18, fontWeight: 700, color: "#991B1B", margin: "0 0 8px" }}>
-          Akses Ditolak
+          Access denied
         </h2>
         <p style={{ fontSize: 13, color: "#4A6A56", margin: "0 0 20px", lineHeight: 1.6 }}>
-          Halaman ini hanya dapat diakses oleh <strong>Strategic Planning & Operations Control (SPOC)</strong>.
-          Anda tidak memiliki izin untuk membuka halaman ini.
+          This page can only be accessed by <strong>Strategic Planning & Operations Control (SPOC)</strong>.
+          You do not have permission to open this page.
         </p>
         <div style={{
           background: "#FEE2E2", border: "1px solid #FCA5A5",
           borderRadius: 10, padding: "10px 16px", fontSize: 12, color: "#991B1B",
           marginBottom: 20,
         }}>
-          Dialihkan ke Dashboard dalam <strong>{countdown} detik</strong>...
+          Redirected to Dashboard in <strong>{countdown} second</strong>...
         </div>
         <button
           onClick={() => router.push("/dashboard")}
@@ -87,7 +87,7 @@ useEffect(() => {
             color: "#ffffff", cursor: "pointer",
           }}
         >
-          Kembali ke Dashboard
+          Return to Dashboard
         </button>
       </div>
     </div>
