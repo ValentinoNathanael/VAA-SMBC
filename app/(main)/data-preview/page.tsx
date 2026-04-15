@@ -408,12 +408,24 @@ export default function DataPreviewPage() {
                   }}
                 >
                   {selectedColumnsArray.map((c, ci) => {
+                    const MONTH_COLS = ["januari","febuari","februari","maret","april","mei","juni",
+                      "juli","agustus","september","oktober","november","desember"];
+
                     const isDateCol = c.toLowerCase().includes("date") ||
                       c.toLowerCase().includes("tanggal") ||
                       c.toLowerCase().includes("live") ||
                       c.toLowerCase().includes("decom");
+
+                    const isMoneyCol = MONTH_COLS.includes(c.toLowerCase().trim()) ||
+                      c.toLowerCase().includes("harga") ||
+                      c.toLowerCase().includes("nilai");
+
                     const raw = r[c];
-                    const val = isDateCol ? excelDateToString(raw) : String(raw ?? "");
+                    const val = isDateCol
+                      ? excelDateToString(raw)
+                      : isMoneyCol && raw !== undefined && raw !== "" && !isNaN(Number(raw))
+                        ? `Rp ${Number(raw).toLocaleString("id-ID")}`
+                        : String(raw ?? "");
                     const isStatus = c.toLowerCase() === "status";
                     const isActive = val.toLowerCase() === "active";
 

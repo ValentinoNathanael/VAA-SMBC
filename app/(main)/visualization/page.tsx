@@ -299,7 +299,39 @@ return (
               Show Bar Chart
             </button>
             {show && <span className="text-xs" style={{ color: "#4A6A56" }}>Showing <span style={{ color: "#1A4731" }}>{filteredRows.length.toLocaleString()}</span> rows</span>}
+            {show && (
+              <button
+                onClick={() => {
+                  setShow(false);
+                  setHueCols([]);
+                  setXCols([]);
+                }}
+                className="text-xs font-medium px-3.5 py-2 rounded-lg transition-all"
+                style={{
+                  background: "#FEE2E2",
+                  border: "1px solid #FCA5A5",
+                  color: "#991B1B",
+                  cursor: "pointer"
+                }}
+              >
+                ✕ Reset Chart
+              </button>
+            )}
+
           </div>
+          {hueCols.length > 0 && barKeys.length > 20 && (
+            <p style={{ 
+              color: "#92400E", 
+              fontSize: 12, 
+              marginTop: 8,
+              background: "#FFFBEB",
+              border: "1px solid #FCD34D",
+              borderRadius: 8,
+              padding: "8px 12px"
+            }}>
+              ⚠️ Comparison Column menghasilkan <strong>{barKeys.length} kategori unik</strong> — chart mungkin tidak terbaca dengan baik. Disarankan pilih kolom dengan nilai yang lebih sedikit (contoh: Status, LOB, Deployment Type).
+            </p>
+          )}
         </div>
 
         {show && (
@@ -317,7 +349,7 @@ return (
               ))}
             </div>
             <div className="mb-4 max-h-28 overflow-y-auto rounded-xl border border-zinc-200 bg-zinc-50 p-3">
-              <div className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-500">Keterangan Warna</div>
+              <div className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-500">Color Description</div>
               <div className="flex flex-wrap gap-3">
                 {hueCols.length > 0 && barKeys.map(k => (
                   <div key={k} className="flex items-center gap-2 text-sm text-zinc-700">
@@ -384,7 +416,7 @@ return (
                 </BarChart>
               </ResponsiveContainer>
             </div>
-            <div className="mt-3 text-xs text-zinc-500">Hover pada batang untuk melihat detail jumlah aplikasi.</div>
+            <div className="mt-3 text-xs text-zinc-500">Hover over the bars to see detailed application counts</div>
           </div>
         )}
       </>
