@@ -187,7 +187,7 @@ const groupBands = useMemo(() => {
 const summaryCards = useMemo(() => ({
   totalData: filteredRows.length,
   totalKategori: chartData.length,
-  totalPembanding: hueCols.length,
+  totalPembanding: barKeys.length,
 }), [filteredRows.length, chartData.length, barKeys.length]);
 
 const selectStyles = {
@@ -247,7 +247,7 @@ return (
                   if (selected.length <= 2) setXCols(selected);
                 }}
                 styles={selectStyles} placeholder="Select column(s)..." />
-                <p className="mt-1 text-xs" style={{ color: "#4A6A56" }}>Maksimal 2 kolom</p>
+                <p className="mt-1 text-xs" style={{ color: "#4A6A56" }}>Maximum 2 columns</p>
             </div>
             <div>
               <label className="block text-xs font-bold mb-2 tracking-widest uppercase" style={{ color: "#1A4731" }}>
@@ -261,7 +261,7 @@ return (
                   if (selected.length <= 2) setHueCols(selected);
                 }}
                 styles={selectStyles} placeholder="Select column(s)..." />
-                <p className="mt-1 text-xs" style={{ color: "#4A6A56" }}>Maksimal 2 kolom</p> 
+                <p className="mt-1 text-xs" style={{ color: "#4A6A56" }}>Maximum 2 columns</p> 
             </div>
           </div>
           {hasStatus && (
@@ -305,11 +305,11 @@ return (
         {show && (
           <div className="mt-8 rounded-2xl bg-white p-5 shadow-sm" style={{ border: "1px solid #D4E8C2" }}>
             <div className="mb-4">
-              <h2 className="text-lg font-semibold text-black">Perbandingan Jumlah Aplikasi</h2>
-              <p className="text-sm text-zinc-500">Sumbu X menunjukkan kategori utama, warna menunjukkan kolom pembanding.</p>
+              <h2 className="text-lg font-semibold text-black">Application Count Comparison</h2>
+              <p className="text-sm text-zinc-500">The X-axis shows the main categories, the colors indicate the comparison columns.</p>
             </div>
             <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-3">
-              {[["Jumlah Data Ditampilkan", summaryCards.totalData], ["Jumlah Kategori", summaryCards.totalKategori], ["Jumlah Pembanding", summaryCards.totalPembanding]].map(([label, val]) => (
+              {[["Number of Data Displayed", summaryCards.totalData], ["Number of Categories", summaryCards.totalKategori], ["Jumlah Pembanding", summaryCards.totalPembanding]].map(([label, val]) => (
                 <div key={String(label)} className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
                   <div className="text-xs text-zinc-500">{label}</div>
                   <div className="text-lg font-semibold text-black">{val}</div>

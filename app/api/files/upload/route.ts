@@ -85,10 +85,15 @@ async function runQualityCheck(objectKey: string, fileName: string, fileId: stri
       return;
     }
 
-    if (!issues.length) {
-      console.log("[QualityCheck] Tidak ada issue ditemukan");
-      return;
-    }
+      await pool.query(
+        `DELETE FROM data_quality_issues WHERE file_name = $1`,
+        [fileName]
+      );
+
+      if (!issues.length) {
+        console.log("[QualityCheck] Tidak ada issue ditemukan");
+        return;
+      }
 
     const filteredIssues = issues.filter((issue: any) =>
       issue.value &&
