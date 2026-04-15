@@ -103,31 +103,31 @@ export default function LoginPage() {
     let hasError = false;
 
     if (!oldPassword) {
-      setOldPasswordError("Password lama wajib diisi.");
+      setOldPasswordError("Old password is required");
       hasError = true;
     }
 
     const passwordRules = [
-      { test: newPassword.length >= 8, msg: "minimal 8 karakter" },
-      { test: /[A-Z]/.test(newPassword), msg: "minimal 1 huruf besar" },
-      { test: /[a-z]/.test(newPassword), msg: "minimal 1 huruf kecil" },
-      { test: /[0-9]/.test(newPassword), msg: "minimal 1 angka" },
-      { test: /[^A-Za-z0-9]/.test(newPassword), msg: "minimal 1 karakter spesial (!@#$%^&* dll)" },
+      { test: newPassword.length >= 8, msg: "Minimum 8 Characters" },
+      { test: /[A-Z]/.test(newPassword), msg: "at least 1 uppercase letter" },
+      { test: /[a-z]/.test(newPassword), msg: "at least 1 lowercase letter" },
+      { test: /[0-9]/.test(newPassword), msg: "at least 1 number" },
+      { test: /[^A-Za-z0-9]/.test(newPassword), msg: "at least 1 special character (!@#$%^&* etc)" },
     ];
     const failed = passwordRules.filter((r) => !r.test);
     if (!newPassword) {
-      setNewPasswordError("Password baru wajib diisi.");
+      setNewPasswordError("New password is required.");
       hasError = true;
     } else if (failed.length > 0) {
-      setNewPasswordError(`Password baru harus memiliki: ${failed.map((r) => r.msg).join(", ")}.`);
+      setNewPasswordError(`The new password must have:${failed.map((r) => r.msg).join(", ")}.`);
       hasError = true;
     }
 
     if (!confirmPassword) {
-      setConfirmPasswordError("Konfirmasi password wajib diisi.");
+      setConfirmPasswordError("Password confirmation is required.");
       hasError = true;
     } else if (newPassword !== confirmPassword) {
-      setConfirmPasswordError("Konfirmasi password tidak cocok.");
+      setConfirmPasswordError("Password confirmation does not match.");
       hasError = true;
     }
 
@@ -139,7 +139,7 @@ export default function LoginPage() {
       body: JSON.stringify({ role: "spoc", password: oldPassword }),
     });
     if (!loginRes.ok) {
-      setOldPasswordError("Password lama salah.");
+      setOldPasswordError("Old password is wrong.");
       return;
     }
 
@@ -152,10 +152,10 @@ export default function LoginPage() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setChangeError(data?.error ?? "Gagal mengubah password.");
+        setChangeError(data?.error ?? "Failed to change password.");
         return;
       }
-      setChangeSuccess("Password berhasil diubah! Silakan login dengan password baru.");
+      setChangeSuccess("Password changed successfully! Please log in with the new password.");
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
@@ -164,7 +164,7 @@ export default function LoginPage() {
         setChangeSuccess("");
       }, 2500);
     } catch {
-      setChangeError("Gagal menghubungi server.");
+      setChangeError("Failed to contact server.");
     } finally {
       setChangeLoading(false);
     }
@@ -294,7 +294,7 @@ function closeModal() {
                     </div>
                   )}
                     <p className="mt-2 text-xs text-gray-500">
-                      Password diperlukan untuk semua role.
+                      Password is required for all roles
                     </p>
                 </div>
 

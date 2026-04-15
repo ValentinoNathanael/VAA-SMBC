@@ -187,7 +187,7 @@ const groupBands = useMemo(() => {
 const summaryCards = useMemo(() => ({
   totalData: filteredRows.length,
   totalKategori: chartData.length,
-  totalPembanding: barKeys.length,
+  totalPembanding: hueCols.length > 0 ? barKeys.length : 0,
 }), [filteredRows.length, chartData.length, barKeys.length]);
 
 const selectStyles = {
@@ -309,7 +309,7 @@ return (
               <p className="text-sm text-zinc-500">The X-axis shows the main categories, the colors indicate the comparison columns.</p>
             </div>
             <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-3">
-              {[["Number of Data Displayed", summaryCards.totalData], ["Number of Categories", summaryCards.totalKategori], ["Jumlah Pembanding", summaryCards.totalPembanding]].map(([label, val]) => (
+              {[["Number of Data Displayed", summaryCards.totalData], ["Number of Categories", summaryCards.totalKategori], ["Number of Comparisons", summaryCards.totalPembanding]].map(([label, val]) => (
                 <div key={String(label)} className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
                   <div className="text-xs text-zinc-500">{label}</div>
                   <div className="text-lg font-semibold text-black">{val}</div>
