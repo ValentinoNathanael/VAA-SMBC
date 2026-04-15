@@ -223,7 +223,7 @@ export function SmartAnswerDisplay({ answer }: { answer: string }) {
             onClick={() => setShowAll(!showAll)}
             style={{ marginTop: 10, width: "100%", background: "none", border: "1px dashed #D4E8C2", borderRadius: 8, padding: "8px", fontSize: 12, color: "#4A6A56", cursor: "pointer", fontWeight: 600 }}
           >
-            {showAll ? "▲ Sembunyikan" : `▼ Tampilkan semua (${cards.length} aplikasi)`}
+            {showAll ? "▲ Hide" : `▼ Show all (${cards.length} application)`}
           </button>
         )}
       </div>

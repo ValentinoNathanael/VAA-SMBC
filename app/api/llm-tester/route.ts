@@ -4,7 +4,7 @@ import { pool } from "@/lib/db";
 export async function GET() {
   try {
     const result = await pool.query(
-      "SELECT * FROM llm_test_history ORDER BY created_at DESC"
+      "SELECT *, created_at + INTERVAL '7 hours' AS created_at_wib FROM llm_test_history ORDER BY created_at DESC"
     );
     return NextResponse.json({ success: true, data: result.rows });
   } catch (err: any) {

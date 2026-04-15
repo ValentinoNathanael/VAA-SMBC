@@ -111,7 +111,7 @@ function ExpandableAnswer({ answer }: { answer: string }) {
             fontWeight: 600,
           }}
         >
-          {expanded ? "▲ Sembunyikan" : "▼ Lihat selengkapnya"}
+          {expanded ? "▲ Hide" : "▼ Show all"}
         </button>
       )}
     </div>
@@ -163,7 +163,12 @@ useEffect(() => {
         reasoning: r.reasoning || "-",
         verdict: r.verdict,
         note: r.note || "",
-        timestamp: new Date(r.created_at).toLocaleString("id-ID"),
+        timestamp: (() => {
+          const d = new Date(r.created_at_wib);
+          const date = d.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+          const time = d.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }).replace(/\./g, ":");
+          return `${date}, ${time}`;
+        })(),
       })));
     });
 }, []);
@@ -224,7 +229,12 @@ async function handleVerdict(verdict: "pass" | "fail") {
     reasoning: r.reasoning || "-",
     verdict: r.verdict,
     note: r.note || "",
-    timestamp: new Date(r.created_at).toLocaleString("id-ID"),
+    timestamp: (() => {
+      const d = new Date(r.created_at_wib);
+      const date = d.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+      const time = d.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }).replace(/\./g, ":");
+      return `${date}, ${time}`;
+    })(),
   })));
 
   setQuestion("");
@@ -337,7 +347,7 @@ async function handleVerdict(verdict: "pass" | "fail") {
             {answer && (
               <div style={{ background: "#ffffff", border: "1px solid #D4E8C2", borderRadius: 16, padding: 20 }}>
                 <label style={{ fontSize: 12, fontWeight: 700, color: "#4A6A56", textTransform: "uppercase" as const, letterSpacing: "0.08em" }}>
-                  Jawaban AI
+                  AI Answers
                 </label>
                   <SmartAnswerDisplay answer={answer} />
               </div>
@@ -369,12 +379,12 @@ async function handleVerdict(verdict: "pass" | "fail") {
             {answer && (
               <div style={{ background: "#ffffff", border: "1px solid #D4E8C2", borderRadius: 16, padding: 20 }}>
                 <label style={{ fontSize: 12, fontWeight: 700, color: "#4A6A56", textTransform: "uppercase" as const, letterSpacing: "0.08em" }}>
-                  Evaluasi
+                  Evaluation
                 </label>
                 <textarea
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  placeholder="Catatan evaluasi (opsional)..."
+                  placeholder="Evaluation notes (optional)....."
                   style={{
                     width: "100%", minHeight: 60, marginTop: 8, resize: "none" as const,
                     background: "#F7F8F5", border: "1px solid #D4E8C2",
@@ -392,7 +402,7 @@ async function handleVerdict(verdict: "pass" | "fail") {
                       color: "#1A4731", cursor: "pointer",
                     }}
                   >
-                    ✅ Pass — Jawaban Benar
+                    ✅ Pass — Correct Answer
                   </button>
                   <button
                     onClick={() => handleVerdict("fail")}
@@ -402,7 +412,7 @@ async function handleVerdict(verdict: "pass" | "fail") {
                       color: "#991B1B", cursor: "pointer",
                     }}
                   >
-                    ❌ Fail — Jawaban Salah
+                    ❌ Fail — Wrong Answer
                   </button>
                 </div>
               </div>
@@ -419,7 +429,7 @@ async function handleVerdict(verdict: "pass" | "fail") {
                 borderRadius: 16, padding: "40px 20px", textAlign: "center" as const,
                 color: "#4A6A56", fontSize: 13,
               }}>
-                Belum ada hasil evaluasi
+                No Evaluation Results Yet
               </div>
             ) : (
               <>
@@ -477,7 +487,7 @@ async function handleVerdict(verdict: "pass" | "fail") {
                     <p style={{ fontSize: 13, fontWeight: 600, color: "#1A4731", margin: "0 0 6px" }}>
                       Q: {r.question}
                     </p>
-                    <ExpandableAnswer answer={r.answer} />
+                    <SmartAnswerDisplay answer={r.answer} />
                     <div style={{ display: "flex", gap: 8, flexWrap: "wrap" as const, marginTop: 8 }}>
                       <span style={{ fontSize: 11, background: "#F7F8F5", border: "1px solid #D4E8C2", borderRadius: 6, padding: "2px 8px", color: "#4A6A56" }}>
                         intent: {r.intent}
