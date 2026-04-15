@@ -27,9 +27,15 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function DELETE() {
+export async function DELETE(req: NextRequest) {
   try {
-    await pool.query("DELETE FROM llm_test_history");
+    const body = await req.json().catch(() => ({}));
+    
+    if (body.id) {
+      await pool.query("DELETE FROM llm_test_history WHERE id = $1", [body.id]);
+    } else {
+      await pool.query("DELETE FROM llm_test_history");
+    }
     return NextResponse.json({ success: true });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });

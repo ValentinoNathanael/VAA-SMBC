@@ -453,7 +453,26 @@ async function handleVerdict(verdict: "pass" | "fail") {
                       }}>
                         {r.verdict === "pass" ? "✅ Pass" : "❌ Fail"}
                       </span>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <span style={{ fontSize: 11, color: "#4A6A56" }}>{r.timestamp}</span>
+                      <button
+                        onClick={async () => {
+                          await fetch("/api/llm-tester", {
+                            method: "DELETE",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ id: r.id }),
+                          });
+                          setResults(prev => prev.filter(item => item.id !== r.id));
+                        }}
+                        style={{
+                          background: "none", border: "1px solid #FCA5A5",
+                          borderRadius: 6, padding: "2px 8px", fontSize: 11,
+                          color: "#991B1B", cursor: "pointer",
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
                     </div>
                     <p style={{ fontSize: 13, fontWeight: 600, color: "#1A4731", margin: "0 0 6px" }}>
                       Q: {r.question}
