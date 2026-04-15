@@ -168,7 +168,7 @@ export default function DataPreviewPage() {
                 }}
               >
                 <span
-                  className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                  className="w-1.5 h-1.5 rounded-full shrink-0"
                   style={{ background: "#8DC63F" }}
                 />
                 {label}:{" "}
@@ -262,7 +262,7 @@ export default function DataPreviewPage() {
           style={{ background: "#8DC63F", color: "#1A4731" }}
         >
           <span
-            className="w-4 h-4 rounded-full flex items-center justify-center text-xs font-black flex-shrink-0"
+            className="w-4 h-4 rounded-full flex items-center justify-center text-xs font-black shrink-0"
             style={{ border: "2px solid #1A4731" }}
           >
             ▶
@@ -329,7 +329,7 @@ export default function DataPreviewPage() {
                   }}
                 >
                   <span
-                    className="w-3 h-3 rounded-sm flex items-center justify-center flex-shrink-0"
+                    className="w-3 h-3 rounded-sm flex items-center justify-center shrink-0"
                     style={{
                       background: active ? "#8DC63F" : "transparent",
                       border: active ? "1.5px solid #8DC63F" : "1.5px solid #D4E8C2",
