@@ -13,6 +13,11 @@ const steps = [
 export default async function DashboardPage() {
   const role = await getRole();
 
+  const visibleSteps = role === "internal"
+    ? steps.filter(s => !["Data Management", "Data Preview"].includes(s.title))
+    .map((s, i) => ({ ...s, num: String(i + 1).padStart(2, "0") }))
+    : steps;
+
   return (
     <div
       style={{
@@ -52,7 +57,7 @@ export default async function DashboardPage() {
           {/* Kanan — Stats */}
           <div style={{ display: "flex", flexDirection: "column", gap: 12, minWidth: 168 }}>
             {[
-              { num: "4", lbl: "Features" },
+              { num: role === "internal" ? "2" : "4", lbl: "Features" },
               { num: "AI", lbl: "Powered" },
             ].map((s) => (
               <div key={s.lbl} style={{ background: "#EEF7DC", border: "1px solid #D4E8C2", borderRadius: 14, padding: "14px 18px", textAlign: "center" }}>
@@ -77,7 +82,7 @@ export default async function DashboardPage() {
           .step-card:hover { background: #EEF7DC !important; border-color: #8DC63F !important; }
         `}</style>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-          {steps.map((item) => {
+          {visibleSteps.map((item) => {
             const Icon = item.icon;
             return (
               <Link
