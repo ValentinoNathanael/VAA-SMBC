@@ -321,7 +321,7 @@ export default function ChatHistoryPage() {
 
       <div>
         <h1 style={{ fontSize: 28, fontWeight: 700, color: "#1A4731", margin: 0, letterSpacing: "-0.02em" }}>
-          Chat History & Export
+          Chat History & Download 
         </h1>
         <p style={{ fontSize: 13, color: "#4A6A56", marginTop: 6, marginBottom: 0 }}>
           Download Excel results and review AI conversation history.

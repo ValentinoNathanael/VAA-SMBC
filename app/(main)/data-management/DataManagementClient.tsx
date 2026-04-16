@@ -193,7 +193,7 @@ function HistoryPanel({ role }: { role: UserRole | null }) {
         alert(json?.error ?? "Delete gagal");
         return;
       }
-      setSuccessNotif(`File "${name}" berhasil dihapus.`);
+      setSuccessNotif(`File "${name}" deleted successfully.`);
       setTimeout(() => setSuccessNotif(null), 3000);
       await load();
     } finally {

@@ -23,7 +23,7 @@ const MENUS = [
     { label: "Data Preview", href: "/data-preview", icon: Eye },
     { label: "Visualization", href: "/visualization", icon: BarChart3 },
     { label: "Ask AI", href: "/ask-ai", icon: Bot },
-    { label: "Chat History & Export", href: "/chat-history", icon: History },
+    { label: "Chat History & Download", href: "/chat-history", icon: History },
 ];
 
 export default function MainLayout({
@@ -157,16 +157,6 @@ export default function MainLayout({
 
                         {/* Bottom area */}
                         <div className="mt-6 space-y-3">
-                            {!collapsed && (
-                                <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">
-                                        Active Menu
-                                    </p>
-                                    <p className="mt-1 text-sm font-semibold text-white">
-                                        {activeLabel}
-                                    </p>
-                                </div>
-                            )}
 
                             <button
                                 onClick={handleLogout}
