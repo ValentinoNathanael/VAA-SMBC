@@ -116,42 +116,45 @@ export default function MainLayout({
                         {/* Menu */}
                         <div className="mt-8 flex-1">
                             <div className="space-y-2">
-                                {MENUS.map((item) => {
-                                    const isActive = pathname === item.href;
-                                    const Icon = item.icon;
-
-                                    return (
-                                        <Link
-                                            key={item.href}
-                                            href={item.href}
-                                            title={item.label}
-                                            className={[
-                                                "group flex items-center rounded-2xl transition-all duration-200",
-                                                collapsed
-                                                    ? "justify-center px-2 py-3"
-                                                    : "gap-3 px-3 py-3",
-                                                isActive
-                                                    ? "bg-[#8DC63F] text-[#1A4731] shadow-[0_8px_24px_rgba(141,198,63,0.35)]"
-                                                    : "text-white/70 hover:bg-white/10 hover:text-white",
-                                            ].join(" ")}
-                                        >
-                                            <span
-                                                className={[
-                                                    "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition",
-                                                    isActive
-                                                        ? "bg-[#1A4731]/20 text-[#1A4731]"
-                                                        : "bg-white/10 text-white/70 group-hover:bg-white/20",
-                                                ].join(" ")}
-                                            >
-                                                <Icon className="h-5 w-5" />
-                                            </span>
-
-                                            {!collapsed && (
-                                                <span className="text-sm font-medium">{item.label}</span>
-                                            )}
-                                        </Link>
-                                    );
-                                })}
+                        {MENUS.filter(item => {
+                        if (role === "internal") {
+                            return !["Data Management", "Data Preview"].includes(item.label);
+                        }
+                        return true;
+                        }).map((item) => {
+                        const isActive = pathname === item.href;
+                        const Icon = item.icon;
+                        return (
+                            <Link
+                            key={item.href}
+                            href={item.href}
+                            title={item.label}
+                            className={[
+                                "group flex items-center rounded-2xl transition-all duration-200",
+                                collapsed
+                                ? "justify-center px-2 py-3"
+                                : "gap-3 px-3 py-3",
+                                isActive
+                                ? "bg-[#8DC63F] text-[#1A4731] shadow-[0_8px_24px_rgba(141,198,63,0.35)]"
+                                : "text-white/70 hover:bg-white/10 hover:text-white",
+                            ].join(" ")}
+                            >
+                            <span
+                                className={[
+                                "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition",
+                                isActive
+                                    ? "bg-[#1A4731]/20 text-[#1A4731]"
+                                    : "bg-white/10 text-white/70 group-hover:bg-white/20",
+                                ].join(" ")}
+                            >
+                                <Icon className="h-5 w-5" />
+                            </span>
+                            {!collapsed && (
+                                <span className="text-sm font-medium">{item.label}</span>
+                            )}
+                            </Link>
+                        );
+                        })}
                             </div>
                         </div>
 

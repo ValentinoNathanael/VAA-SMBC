@@ -753,6 +753,18 @@ export default function AskAIPage() {
     if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) handleAsk();
   }
 
+function handleDownloadTxt() {
+  const content = `Pertanyaan: ${question}\n\nJawaban:\n${answer}`;
+  const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `VAA_Answer_${new Date().toLocaleDateString("id-ID").replace(/\//g, "-")}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+
   return (
     <div style={{ maxWidth: "100%", display: "flex", flexDirection: "column", gap: 24 }}>
 
@@ -860,6 +872,21 @@ export default function AskAIPage() {
             {!loading && answer && (
               <span style={{ fontSize: 11, color: "#4A6A56", marginLeft: 4 }}>· VAA SMBC Indonesia</span>
             )}
+            {!loading && answer && (
+            <button
+              onClick={handleDownloadTxt}
+              style={{
+                marginLeft: "auto",
+                display: "flex", alignItems: "center", gap: 6,
+                background: "#F7F8F5", border: "1px solid #D4E8C2",
+                borderRadius: 8, padding: "5px 12px",
+                fontSize: 11, fontWeight: 600, color: "#1A4731",
+                cursor: "pointer",
+              }}
+            >
+              ⬇ Export TXT
+            </button>
+)}
             {loading && (
               <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 5 }}>
                 {[0, 1, 2].map((i) => (
