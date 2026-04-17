@@ -60,7 +60,7 @@ export default async function DashboardPage() {
               { num: "AI", lbl: "Powered" },
             ].map((s) => (
               <div key={s.lbl} style={{ background: "#EEF7DC", border: "1px solid #D4E8C2", borderRadius: 14, padding: "14px 18px", textAlign: "center" }}>
-                <div style={{ fontFamily: "Georgia, serif", fontSize: 26, color: "#1A4731", lineHeight: 1, marginBottom: 4 }}>{s.num}</div>
+                <div style={{ fontSize: 26, color: "#1A4731", lineHeight: 1, marginBottom: 4 }}>{s.num}</div>
                 <div style={{ fontSize: 10.5, color: "#4A6A56", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" }}>{s.lbl}</div>
               </div>
             ))}

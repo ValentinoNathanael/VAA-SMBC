@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import type { UserRole } from "@/lib/auth";
 import { canUpload } from "@/lib/auth";
+import { Upload, Trash2 } from "lucide-react";
+import { CheckCircle, XCircle } from "lucide-react";
+import { FileSpreadsheet } from "lucide-react";
 
 type Tab = "upload" | "history";
 
@@ -77,14 +80,14 @@ function UploadPanel({ allowUpload }: { allowUpload: boolean }) {
       const form = new FormData();
       form.append("file", file);
       const res = await fetch("/api/files/upload", { method: "POST", body: form });
-      if (!res.ok) throw new Error("Upload gagal");
+      if (!res.ok) throw new Error("Upload failed");
       const data = await res.json();
       await fetch("/api/active-file", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fileId: data.fileId }),
       });
-      setNotify({ type: "success", msg: `File "${file.name}" success uploaded` });
+      setNotify({ type: "success", msg: `File "${file.name}" uploaded successfully` });
       setTimeout(() => { router.refresh(); }, 2000);
     } catch {
       setNotify({ type: "error", msg: "Upload failed. Please try again." });
@@ -98,14 +101,16 @@ function UploadPanel({ allowUpload }: { allowUpload: boolean }) {
     <>
       {notify && (
         <div className={["mb-4 flex items-center gap-3 rounded-2xl px-5 py-4 text-sm font-semibold shadow-lg", notify.type === "success" ? "bg-[#8DC63F] text-[#1A4731]" : "bg-red-500 text-white"].join(" ")}>
-          <span className="text-lg">{notify.type === "success" ? "✅" : "❌"}</span>
+          {notify.type === "success" ? <CheckCircle size={18} color="#1A4731" /> : <XCircle size={18} color="white" />}
           {notify.msg}
         </div>
       )}
       <div className="rounded-[28px] border border-[#D4E8C2] bg-white p-6 shadow-[0_18px_50px_rgba(0,0,0,0.06)]">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-stretch">
           <div className="lg:w-[320px]">
-            <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-[#8DC63F] text-2xl text-[#1A4731] shadow-md">⬆️</div>
+            <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-[#8DC63F] text-2xl text-[#1A4731] shadow-md">
+              <Upload size={24} color="#1A4731" />
+            </div>
             <h3 className="mt-5 text-2xl font-semibold text-[#1A4731]">Upload Latest Excel File</h3>
             <p className="mt-2 text-sm leading-6 text-[#4A6A56]">Upload the latest Excel file to directly convert it into data in the system. The uploaded file will be available for preview, visualization, and AI analysis.</p>
           </div>
@@ -113,7 +118,9 @@ function UploadPanel({ allowUpload }: { allowUpload: boolean }) {
             <div className="flex h-full min-h-[250px] flex-col justify-between rounded-[22px] border border-dashed border-[#8DC63F]/50 bg-[#EEF7DC] p-6 text-[#1A4731] shadow-inner">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-2xl shadow-sm">⬆️</div>
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-sm">
+                    <Upload size={28} color="#1A4731" />
+                  </div>
                   <div>
                     <p className="text-lg font-semibold">{uploading ? "Uploading file..." : "Drop file here"}</p>
                     <p className="mt-1 text-sm text-[#4A6A56]">Supported format: .xlsx</p>
@@ -214,7 +221,7 @@ function HistoryPanel({ role }: { role: UserRole | null }) {
       {/* Success notification */}
       {successNotif && (
         <div className="mb-4 flex items-center gap-3 rounded-2xl bg-[#8DC63F] px-5 py-4 text-sm font-semibold text-[#1A4731] shadow-lg">
-          <span className="text-lg">✅</span>
+          <CheckCircle size={18} color="#1A4731" />
           {successNotif}
         </div>
       )}
@@ -250,10 +257,7 @@ function HistoryPanel({ role }: { role: UserRole | null }) {
                   <div className="py-4 pr-4">
                     <button onClick={() => selectFile(String(r.id))} className="group flex w-full items-center gap-3 text-left">
                       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#EAF3E0]">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="#3B6D11" strokeWidth="1.5" />
-                          <path d="M14 2v6h6" stroke="#3B6D11" strokeWidth="1.5" />
-                        </svg>
+                        <FileSpreadsheet size={16} color="#3B6D11" strokeWidth={1.5} />
                       </div>
                       <div className="min-w-0">
                         <p className="truncate text-sm font-semibold text-[#1A3A1A] group-hover:underline">{r.file_name}</p>
@@ -268,7 +272,7 @@ function HistoryPanel({ role }: { role: UserRole | null }) {
                       <button
                         onClick={() => openDeleteModal(String(r.id), r.file_name)}
                         disabled={busyId === String(r.id)}
-                        className={["rounded-lg px-4 py-2 text-xs font-semibold transition", busyId === String(r.id) ? "cursor-not-allowed bg-zinc-200 text-zinc-500" : "bg-red-600 text-white hover:bg-red-700"].join(" ")}
+                        className={["rounded-lg px-4 py-2 text-xs font-semibold transition", busyId === String(r.id) ? "cursor-not-allowed bg-zinc-200 text-zinc-500" : "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100"].join(" ")}
                       >
                         {busyId === String(r.id) ? "Deleting..." : "Delete"}
                       </button>
@@ -288,7 +292,9 @@ function HistoryPanel({ role }: { role: UserRole | null }) {
         >
           <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl">
             <div className="mb-5 flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-red-100 text-xl">🗑️</div>
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-red-100">
+                <Trash2 size={20} color="#DC2626" />
+              </div>
               <div>
                 <h4 className="text-lg font-bold text-[#1A4731]">Delete file</h4>
                 <p className="text-xs text-[#4A6A56]">This action cannot be reversed once completed</p>

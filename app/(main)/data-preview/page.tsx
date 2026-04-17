@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { Play } from "lucide-react";
 
 type FileItem = {
   id: string;
@@ -261,12 +262,7 @@ export default function DataPreviewPage() {
           className="flex items-center gap-2 text-sm font-bold px-5 py-2 rounded-xl transition-all disabled:opacity-40"
           style={{ background: "#8DC63F", color: "#1A4731" }}
         >
-          <span
-            className="w-4 h-4 rounded-full flex items-center justify-center text-xs font-black shrink-0"
-            style={{ border: "2px solid #1A4731" }}
-          >
-            ▶
-          </span>
+        <Play size={12} color="#1A4731" fill="#1A4731" />
           {loading ? "Loading..." : "Load Preview"}
         </button>
 
@@ -506,7 +502,7 @@ export default function DataPreviewPage() {
 
       {!rows.length && meta.fileId && (
         <p className="mt-3 text-sm" style={{ color: "#4A6A56" }}>
-          Tidak ada data untuk ditampilkan.
+          No data to display.
         </p>
       )}
     </div>
