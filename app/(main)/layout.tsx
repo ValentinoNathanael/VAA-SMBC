@@ -164,7 +164,7 @@ export default function MainLayout({
                             <button
                                 onClick={handleLogout}
                                 className={[
-                                    "flex items-center rounded-2xl bg-black/30 text-sm font-semibold text-white transition hover:bg-black/50",
+                                    "flex items-center rounded-2xl bg-white/10 text-sm font-semibold text-white transition hover:bg-white/20",
                                     collapsed
                                         ? "w-full justify-center px-3 py-3"
                                         : "w-full justify-center gap-3 px-4 py-3",

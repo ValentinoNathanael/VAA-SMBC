@@ -68,7 +68,7 @@ function UploadPanel({ allowUpload }: { allowUpload: boolean }) {
     if (!file) return;
     const ext = file.name.split(".").pop()?.toLowerCase();
     if (ext !== "xlsx" && ext !== "xls") {
-      setNotify({ type: "error", msg: "Hanya file Excel (.xlsx / .xls) yang diizinkan." });
+      setNotify({ type: "error", msg: "Only Excel files (.xlsx / .xls) are allowed." });
       e.target.value = "";
       return;
     }
@@ -87,7 +87,7 @@ function UploadPanel({ allowUpload }: { allowUpload: boolean }) {
       setNotify({ type: "success", msg: `File "${file.name}" success uploaded` });
       setTimeout(() => { router.refresh(); }, 2000);
     } catch {
-      setNotify({ type: "error", msg: "Upload gagal. Coba lagi." });
+      setNotify({ type: "error", msg: "Upload failed. Please try again." });
     } finally {
       setUploading(false);
       e.target.value = "";
@@ -128,7 +128,7 @@ function UploadPanel({ allowUpload }: { allowUpload: boolean }) {
                     <span className="font-medium text-[#4A6A56]">Upload only for <span className="font-semibold text-[#1A4731]">Strategic Planning & Operations Control</span>. You can still access file history.</span>
                   )}
                 </div>
-                <label className={["inline-flex cursor-pointer items-center justify-center rounded-full px-6 py-3 text-sm font-semibold shadow-sm transition-all duration-200", !allowUpload || uploading ? "cursor-not-allowed bg-white/60 text-[#4A6A56]/50" : "bg-[#1A4731] text-white hover:-translate-y-0.5 hover:bg-[#15392A]"].join(" ")}>
+                <label className={["inline-flex cursor-pointer items-center justify-center rounded-full px-6 py-3 text-sm font-semibold shadow-sm transition-all duration-200", !allowUpload || uploading ? "cursor-not-allowed bg-white/60 text-[#4A6A56]/50" : "bg-[#1A4731] text-white hover:-translate-y-0.5 hover:bg-[#15392A] active:scale-95"].join(" ")}>
                   {uploading ? "Uploading..." : "Browse Files"}
                   <input type="file" className="hidden" accept=".xlsx,.xls" disabled={!allowUpload || uploading} onChange={handleFileChange} />
                 </label>
@@ -190,7 +190,7 @@ function HistoryPanel({ role }: { role: UserRole | null }) {
       const res = await fetch(`/api/files/${id}`, { method: "DELETE" });
       const json = await res.json().catch(() => ({}));
       if (!res.ok) {
-        alert(json?.error ?? "Delete gagal");
+        alert(json?.error ?? "Delete failed");
         return;
       }
       setSuccessNotif(`File "${name}" deleted successfully.`);

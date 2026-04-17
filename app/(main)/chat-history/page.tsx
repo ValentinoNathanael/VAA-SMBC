@@ -148,7 +148,7 @@ function BiayaCard({ item, index }: { item: { appId: string; nama: string; total
       </button>
       {open && item.months.length > 0 && (
         <div style={{ padding: "10px 14px 14px", borderTop: "1px solid #D4E8C2" }}>
-          <p style={{ fontSize: 11, color: "#4A6A56", margin: "0 0 8px", fontWeight: 600 }}>Rincian per bulan</p>
+          <p style={{ fontSize: 11, color: "#4A6A56", margin: "0 0 8px", fontWeight: 600 }}>Monthly breakdown</p>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 16px" }}>
             {item.months.map((m, i) => (
               <div key={i}>
@@ -177,7 +177,7 @@ function FormattedAnswer({ answer }: { answer: string }) {
     return (
       <div style={{ flex: 1 }}>
         {intro && <p style={{ color: "#4A6A56", fontSize: 13, marginBottom: 8, whiteSpace: "pre-wrap" }}>{intro}</p>}
-        {items.length > 0 && <p style={{ color: "#8DC63F", fontSize: 11, marginBottom: 8 }}>{items.length} aplikasi</p>}
+        {items.length > 0 && <p style={{ color: "#8DC63F", fontSize: 11, marginBottom: 8 }}>{items.length} applications</p>}
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           {visibleItems.map((item, i) => <BiayaCard key={i} item={item} index={i} />)}
         </div>
@@ -343,7 +343,7 @@ export default function ChatHistoryPage() {
             onChange={(e) => setSelectedFile(e.target.value)}
             style={{ flex: 1, minWidth: 200, background: "#F7F8F5", border: "1px solid #D4E8C2", borderRadius: 12, padding: "10px 16px", color: "#1A4731", fontSize: 13, outline: "none" }}
           >
-            <option value="" style={{ background: "#ffffff" }}>Pilih file</option>
+            <option value="" style={{ background: "#ffffff" }}>Select file</option>
             {files.map((file) => (
               <option key={file.id} value={file.object_key} style={{ background: "#ffffff" }}>{file.file_name}</option>
             ))}
@@ -360,7 +360,7 @@ export default function ChatHistoryPage() {
             <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#EEF7DC", border: "1px solid #8DC63F", borderRadius: 10, padding: "8px 14px", marginTop: 12, width: "100%" }}>
               <span style={{ fontSize: 14 }}>✅</span>
               <p style={{ fontSize: 12, color: "#1A4731", margin: 0, fontWeight: 600 }}>
-                File berhasil diunduh!
+                File downloaded successfully!
               </p>
             </div>
           )}
@@ -388,7 +388,7 @@ export default function ChatHistoryPage() {
         </div>
 
         {loadingHistory ? (
-          <div style={{ padding: "32px 0", textAlign: "center", color: "#4A6A56", fontSize: 13 }}>Memuat history...</div>
+          <div style={{ padding: "32px 0", textAlign: "center", color: "#4A6A56", fontSize: 13 }}>Loading history...</div>
         ) : chatHistory.length === 0 ? (
           <div style={{ padding: "40px 0", textAlign: "center", color: "#4A6A56", fontSize: 13, border: "1px dashed #D4E8C2", borderRadius: 12 }}>Empty Chat</div>
         ) : (
