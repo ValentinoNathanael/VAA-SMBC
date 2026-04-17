@@ -20,6 +20,8 @@ const [xCols, setXCols] = useState<string[]>([]);
 const [hueCols, setHueCols] = useState<string[]>([]);
 const [statusSelected, setStatusSelected] = useState<string[]>([]);
 const [show, setShow] = useState(false);
+const [files, setFiles] = useState<{id: string, file_name: string}[]>([]);
+const [selectedFileId, setSelectedFileId] = useState<string>("");
 
 
 function findCol(cols: string[], ...names: string[]): string | undefined {
@@ -67,9 +69,16 @@ function makeXTickLabelFromFull(full: string) {
   return parts[0] ?? "";
 }
 
-async function loadPreviewData() {
+async function loadPreviewData(fileId?: string) {
   setLoading(true);
   try {
+    if (fileId) {
+      await fetch("/api/active-file", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fileId }),
+      });
+    }
     const res = await fetch("/api/preview?all=true", { cache: "no-store" });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data?.error ?? "Failed to load preview");
@@ -78,9 +87,20 @@ async function loadPreviewData() {
   } finally {
     setLoading(false);
   }
-}
+} 
 
-useEffect(() => { loadPreviewData(); }, []);
+useEffect(() => {
+  fetch("/api/files")
+    .then(r => r.json())
+    .then(data => {
+      const items = data.items ?? [];
+      setFiles(items);
+      if (items.length > 0) {
+        setSelectedFileId(items[0].id);
+        loadPreviewData(items[0].id);
+      }
+    });
+}, []);
 
 const statusKey = useMemo(() => findCol(columns, "Status"), [columns]);
 const liveKey   = useMemo(() => findCol(columns, "Date_Live", "Date_LIve", "DateLive", "date live"), [columns]);
@@ -227,6 +247,32 @@ return (
     {/* ═══════════════ BAR CHART ═══════════════ */}
     {tab === "bar" && (
       <>
+        {files.length > 0 && (
+        <div className="mb-4 flex items-center gap-3">
+          <label className="text-xs font-bold tracking-widest uppercase" style={{ color: "#1A4731" }}>
+            Select File
+          </label>
+          <select
+            value={selectedFileId}
+            onChange={(e) => {
+              setSelectedFileId(e.target.value);
+              setShow(false);
+              setXCols([]);
+              setHueCols([]);
+              loadPreviewData(e.target.value);
+            }}
+            style={{
+              background: "#F7F8F5", border: "1px solid #D4E8C2",
+              borderRadius: 10, padding: "6px 12px",
+              color: "#1A4731", fontSize: 13, outline: "none",
+            }}
+          >
+            {files.map(f => (
+              <option key={f.id} value={f.id}>{f.file_name}</option>
+            ))}
+          </select>
+        </div>
+      )}
         <div className="rounded-2xl p-6 mb-6" style={{
           background: "#ffffff",
           border: "1px solid #D4E8C2",

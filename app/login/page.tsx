@@ -43,7 +43,7 @@ function PasswordInput({
         onKeyDown={onKeyDown}
         placeholder={placeholder}
         disabled={disabled}
-        className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 pr-12 text-sm text-gray-900 outline-none transition-all duration-200 focus:border-green-700 focus:bg-white disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400"
+        className="w-full rounded-2xl border border-gray-200 bg-gray-50/80 px-4 py-3.5 pr-12 text-sm text-gray-900 outline-none transition-all duration-200 focus:border-green-700 focus:bg-white disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400"
       />
       {!disabled && (
         <button
@@ -87,7 +87,7 @@ export default function LoginPage() {
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
-      setError(data?.error ?? "Login gagal");
+      setError(data?.error ?? "Login failed");
       return;
     }
     router.push("/dashboard");
@@ -199,12 +199,10 @@ function closeModal() {
             <div className="absolute -bottom-20 left-10 h-64 w-64 rounded-full border border-white/10" />
 
             <div className="relative z-10">
-              <div className="flex items-center gap-4">
-                <div className="rounded-2xl bg-white px-4 py-3 shadow-lg">
-                  <img src="/Logo-SMBC.png" alt="SMBC" className="h-8 w-auto object-contain" />
-                </div>
-                <p className="text-xs uppercase tracking-[0.28em] text-white/70">Internal Access Platform</p>
-              </div>
+            <div className="flex items-center gap-3 rounded-full bg-white/15 backdrop-blur px-4 py-2 border border-white/20">
+              <img src="/Logo-SMBC.png" alt="SMBC" className="h-8 w-auto object-contain" />
+              <p className="text-xs uppercase tracking-[0.28em] text-white/70">Internal Access Platform</p>
+            </div>
 
               <div className="mt-12 max-w-xl">
                 <p className="text-sm uppercase tracking-[0.28em] text-lime-200/80">Welcome to VAA</p>
@@ -306,7 +304,7 @@ function closeModal() {
 
                 <button
                   onClick={handleLogin}
-                  className="w-full rounded-2xl bg-green-900 px-6 py-4 text-sm font-semibold text-white shadow-lg transition-all duration-200 hover:bg-green-800 hover:shadow-xl"
+                  className="w-full rounded-2xl bg-green-900 px-6 py-4 text-sm font-semibold text-white shadow-lg transition-all duration-200 hover:bg-green-800 hover:shadow-xl active:scale-95"
                 >
                   Continue
                 </button>
@@ -399,7 +397,7 @@ function closeModal() {
                   disabled={changeLoading}
                   className="flex-1 rounded-2xl bg-green-900 px-4 py-3 text-sm font-semibold text-white shadow-md transition-all hover:bg-green-800 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  {changeLoading ? "Menyimpan..." : "Update Password"}
+                  {changeLoading ? "Saving..." : "Update Password"}
                 </button>
               </div>
             </div>

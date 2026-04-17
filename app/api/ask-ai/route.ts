@@ -1068,6 +1068,10 @@ if (isAverageOperation && engineResult?.aggregated) {
         .join("\n");
     }
 
+
+    console.log("[Debug] preformattedList:", preformattedList);
+    console.log("[Debug] engineResult.items[0] keys:", Object.keys(engineResult.items?.[0] || {}));
+
     const isSpecificColumnQuery = ["hostname", "host name", "lokasi"].some(kw => questionLower.includes(kw));
     const isSingleEntity = engineResult?.totalCount === 1;
 

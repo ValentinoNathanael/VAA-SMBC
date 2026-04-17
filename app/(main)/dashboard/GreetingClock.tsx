@@ -98,6 +98,7 @@ export default function GreetingClock({ role }: { role: string | null }) {
         fontWeight: 700,
         color: "#1A4731",
         letterSpacing: "0.08em",
+        fontVariantNumeric: "tabular-nums",
       }}>
         {now ? formatTime(now) : "--:--:--"}
       </div>

@@ -20,10 +20,9 @@ export default async function DashboardPage() {
 
   return (
     <div
-      style={{
-        fontFamily: "'Plus Jakarta Sans', sans-serif",
-        color: "#1A4731",
-      }}
+    style={{
+      color: "#1A4731",
+    }}
     >
       {/* Main Content */}
       <div style={{ width: "100%" }}>
@@ -38,7 +37,7 @@ export default async function DashboardPage() {
               AI Assistant
             </div>
 
-            <h1 style={{ fontSize: 40, fontWeight: 400, lineHeight: 1.1, color: "#1A4731", margin: "0 0 12px", letterSpacing: "-0.01em", fontFamily: "Georgia, 'Times New Roman', serif" }}>
+            <h1 style={{ fontSize: 40, fontWeight: 400, lineHeight: 1.1, color: "#1A4731", margin: "0 0 12px", letterSpacing: "-0.01em", fontFamily: "inherit" }}>
               Welcome to{" "}
               <em style={{ fontStyle: "italic", color: "#8DC63F" }}>VAA</em>
               <br />
@@ -78,7 +77,7 @@ export default async function DashboardPage() {
 
         {/* Steps Grid */}
         <style>{`
-          .step-card { background: #ffffff; border: 1px solid #D4E8C2; transition: all 0.22s ease; text-decoration: none; display: flex; }
+          .step-card { background: #ffffff; border: 1px solid #D4E8C2; transition: all 0.22s ease; text-decoration: none; display: flex; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
           .step-card:hover { background: #EEF7DC !important; border-color: #8DC63F !important; }
         `}</style>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
