@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { Download } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 
 function parseAnswer(answer: string): { intro: string; items: string[] } {
   const items: string[] = [];
@@ -507,7 +509,7 @@ function AppCard({ item, index, visible, isUniqueList }: {
                 borderRadius: 6, padding: "2px 8px", cursor: "pointer",
               }}
             >
-              +{extras.length - previewChips.length} lainnya
+              +{extras.length - previewChips.length} more
             </span>
           )}
         </div>
@@ -569,7 +571,7 @@ function AppCard({ item, index, visible, isUniqueList }: {
             <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#4A6A56" strokeWidth="1.5">
               <polyline points="4,10 8,6 12,10" />
             </svg>
-            Tutup detail
+            Close
           </div>
         </div>
       )}
@@ -736,13 +738,13 @@ export default function AskAIPage() {
         body: JSON.stringify({ question }),
       });
       const json = await res.json();
-      setAnswer(json.success ? json.answer || "" : json.error || "Terjadi error.");
+      setAnswer(json.success ? json.answer || "" : json.error || "An error occurred.");
       setIntent(json.intent || "");
       setDataIssues(json.dataIssues || []);
       setFilterContext(json.filterContext || "");
       setIssuesOpen(false);
     } catch {
-      setAnswer("Gagal menghubungi server.");
+      setAnswer("Failed to connect to server.");
     } finally {
       setLoading(false);
       setTimeout(() => answerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
@@ -833,7 +835,7 @@ function handleDownloadTxt() {
                 <svg style={{ animation: "spin 1s linear infinite" }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
                 </svg>
-                Memproses...
+                Processing...
               </>
             ) : (
               <>
@@ -884,7 +886,7 @@ function handleDownloadTxt() {
                 cursor: "pointer",
               }}
             >
-              ⬇ Export TXT
+            <Download size={12} /> Export TXT
             </button>
 )}
             {loading && (
@@ -928,13 +930,13 @@ function handleDownloadTxt() {
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontSize: 16 }}>⚠️</span>
+              <AlertTriangle size={16} color="#92400E" />
               <span style={{ fontSize: 13, fontWeight: 600, color: "#92400E" }}>
-                Potensi Masalah Data ({dataIssues.length})
+                Potential Data Issues ({dataIssues.length})
               </span>
             </div>
             <span style={{ color: "#92400E", fontSize: 12 }}>
-              {issuesOpen ? "▲ Tutup" : "▼ Lihat Detail"}
+              {issuesOpen ? "▲ Close" : "▼ View Details"}
             </span>
           </button>
           {issuesOpen && (

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Download, MessageCircle, Clock } from "lucide-react";
 
 type FileItem = {
   id: number;
@@ -331,7 +332,9 @@ export default function ChatHistoryPage() {
       {/* Download Card */}
       <div style={{ background: "#ffffff", border: "1px solid #D4E8C2", borderRadius: 20, padding: 24 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
-          <div style={{ width: 36, height: 36, borderRadius: 10, background: "#EEF7DC", border: "1px solid #D4E8C2", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>⬇️</div>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: "#EEF7DC", border: "1px solid #D4E8C2", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Download size={18} color="#1A4731" />
+          </div>
           <div>
             <p style={{ fontSize: 15, fontWeight: 700, color: "#1A4731", margin: 0 }}>Download Result File</p>
             <p style={{ fontSize: 12, color: "#4A6A56", margin: 0 }}>Export processed Excel data</p>
@@ -370,7 +373,9 @@ export default function ChatHistoryPage() {
       {/* Chat History Card */}
       <div style={{ background: "#ffffff", border: "1px solid #D4E8C2", borderRadius: 20, padding: 24 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-          <div style={{ width: 36, height: 36, borderRadius: 10, background: "#EEF7DC", border: "1px solid #D4E8C2", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>💬</div>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: "#EEF7DC", border: "1px solid #D4E8C2", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <MessageCircle size={18} color="#1A4731" />
+          </div>
           <div>
             <p style={{ fontSize: 15, fontWeight: 700, color: "#1A4731", margin: 0 }}>Chat History</p>
             <p style={{ fontSize: 12, color: "#4A6A56", margin: 0 }}>
@@ -381,7 +386,7 @@ export default function ChatHistoryPage() {
 
         {/* Expiry note */}
         <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#FFFBEB", border: "1px solid #FCD34D", borderRadius: 10, padding: "8px 14px", marginBottom: 16 }}>
-          <span style={{ fontSize: 14 }}>⏱️</span>
+          <Clock size={14} color="#92400E" />
           <p style={{ fontSize: 12, color: "#92400E", margin: 0 }}>
             Chat history is automatically deleted after <strong>20 - 55 seconds</strong> Conversation history is temporary.
           </p>

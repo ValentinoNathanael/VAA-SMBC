@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { SmartAnswerDisplay } from "./SmartAnswerDisplay";
+import { Pencil, ClipboardList, CheckCircle, XCircle, Lock } from "lucide-react";
 
 type TestResult = {
   id: number;
@@ -57,14 +58,7 @@ useEffect(() => {
         borderRadius: 20, padding: "40px 48px", maxWidth: 420,
         textAlign: "center",
       }}>
-        <div style={{
-          width: 56, height: 56, borderRadius: 16, background: "#FEE2E2",
-          border: "1px solid #FCA5A5", display: "flex",
-          alignItems: "center", justifyContent: "center",
-          margin: "0 auto 16px", fontSize: 24,
-        }}>
-          🔒
-        </div>
+        <Lock size={24} color="#991B1B" />
         <h2 style={{ fontSize: 18, fontWeight: 700, color: "#991B1B", margin: "0 0 8px" }}>
           Access denied
         </h2>
@@ -249,7 +243,7 @@ async function handleVerdict(verdict: "pass" | "fail") {
   if (!roleLoaded) {
     return (
       <div style={{ minHeight: "100vh", background: "#F7F8F5", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <p style={{ color: "#4A6A56", fontSize: 13 }}>Memuat...</p>
+        <p style={{ color: "#4A6A56", fontSize: 13 }}>Loading...</p>
       </div>
     );
   }
@@ -276,10 +270,10 @@ async function handleVerdict(verdict: "pass" | "fail") {
             </div>
             <div style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
               <div style={{ background: "#EEF7DC", border: "1px solid #8DC63F", borderRadius: 8, padding: "4px 12px", fontSize: 12, color: "#1A4731", fontWeight: 600 }}>
-                ✅ Pass: {passCount}
+                <CheckCircle size={12} /> Pass: {passCount}
               </div>
               <div style={{ background: "#FEE2E2", border: "1px solid #FCA5A5", borderRadius: 8, padding: "4px 12px", fontSize: 12, color: "#991B1B", fontWeight: 600 }}>
-                ❌ Fail: {failCount}
+                <XCircle size={12} /> Fail: {failCount}
               </div>
             </div>
           </div>
@@ -299,7 +293,7 @@ async function handleVerdict(verdict: "pass" | "fail") {
                   transition: "all 0.2s",
                 }}
               >
-                {tab === "tester" ? "🧪 Test AI" : `📋 History (${results.length})`}
+                {tab === "tester" ? <><Pencil size={12} /> Test AI</> : <><ClipboardList size={12} /> History ({results.length})</>}
               </button>
             ))}
           </div>
@@ -339,7 +333,7 @@ async function handleVerdict(verdict: "pass" | "fail") {
                     transition: "all 0.2s",
                   }}
                 >
-                  {loading ? "Memproses..." : "🚀 Test"}
+                  {loading ? "Processing..." : "🚀 Test"}
                 </button>
               </div>
             </div>
@@ -402,7 +396,7 @@ async function handleVerdict(verdict: "pass" | "fail") {
                       color: "#1A4731", cursor: "pointer",
                     }}
                   >
-                    ✅ Pass — Correct Answer
+                    <CheckCircle size={16} /> Pass — Correct Answer
                   </button>
                   <button
                     onClick={() => handleVerdict("fail")}
@@ -412,7 +406,7 @@ async function handleVerdict(verdict: "pass" | "fail") {
                       color: "#991B1B", cursor: "pointer",
                     }}
                   >
-                    ❌ Fail — Wrong Answer
+                    <XCircle size={16} /> Fail — Wrong Answer
                   </button>
                 </div>
               </div>

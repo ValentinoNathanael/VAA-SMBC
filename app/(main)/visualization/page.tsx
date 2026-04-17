@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { Play } from "lucide-react";
+import { X } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import {
     BarChart, Bar, XAxis, YAxis, Tooltip,
     ResponsiveContainer, Customized, CartesianGrid,
@@ -24,6 +27,7 @@ const [files, setFiles] = useState<{id: string, file_name: string}[]>([]);
 const [selectedFileId, setSelectedFileId] = useState<string>("");
 
 
+
 function findCol(cols: string[], ...names: string[]): string | undefined {
   for (const name of names) {
     const found = cols.find(c => c.trim().toLowerCase() === name.toLowerCase());
@@ -39,8 +43,8 @@ function stringToColor(str: string) {
     hash = hash ^ (hash >> 16);
   }
   const hue = Math.abs(hash * 137.508) % 360;
-  const sat = 55 + (Math.abs(hash) % 20);
-  const lit = 42 + (Math.abs(hash >> 8) % 16);
+  const sat = 35 + (Math.abs(hash) % 15);
+  const lit = 50 + (Math.abs(hash >> 8) % 10);
   return `hsl(${hue}, ${sat}%, ${lit}%)`;
 }
 
@@ -128,7 +132,8 @@ const chartData = useMemo(() => {
   if (!show || !xCols.length) return [];
   const map = new Map<string, Record<string, any>>();
   for (const r of filteredRows) {
-    const x = xCols.map(c => String(r[c] ?? "").trim()).join(" | ") || "(Empty)";
+  const x = xCols.map(c => String(r[c] ?? "").trim()).join(" | ") || "";
+  if (!x) continue;
     const hue = hueCols.length ? hueCols.map(c => String(r[c] ?? "").trim()).join(" | ") : "Total";
     if (!map.has(x)) map.set(x, { x });
     const obj = map.get(x)!;
@@ -226,6 +231,9 @@ const selectStyles = {
 
 return (
   <div className="min-h-screen" style={{ color: "#1A4731" }}>
+    <style>{`
+      .reset-btn:hover { background: #EEF7DC !important; border-color: #8DC63F !important; }
+    `}</style>
 
     {/* Header + Tab */}
     <div className="flex items-end justify-between mb-8">
@@ -341,43 +349,49 @@ return (
             <button disabled={!xCols.length} onClick={() => setShow(true)}
               className="flex items-center gap-2 text-sm font-bold px-6 py-2.5 rounded-xl transition-all disabled:opacity-40"
               style={{ background: "#8DC63F", color: "#1A4731", boxShadow: "0 0 20px rgba(141,198,63,0.2)" }}>
-              <span className="w-4 h-4 rounded-full flex items-center justify-center text-xs font-black" style={{ border: "2px solid #1A4731" }}>▶</span>
+              <Play size={12} color="#1A4731" fill="#1A4731" />
               Show Bar Chart
             </button>
             {show && <span className="text-xs" style={{ color: "#4A6A56" }}>Showing <span style={{ color: "#1A4731" }}>{filteredRows.length.toLocaleString()}</span> rows</span>}
             {show && (
-              <button
-                onClick={() => {
-                  setShow(false);
-                  setHueCols([]);
-                  setXCols([]);
-                }}
-                className="text-xs font-medium px-3.5 py-2 rounded-lg transition-all"
-                style={{
-                  background: "#FEE2E2",
-                  border: "1px solid #FCA5A5",
-                  color: "#991B1B",
-                  cursor: "pointer"
-                }}
-              >
-                ✕ Reset Chart
-              </button>
+              
+            <button
+              onClick={() => {
+                setShow(false);
+                setHueCols([]);
+                setXCols([]);
+              }}
+              className="reset-btn flex items-center gap-1.5 text-xs font-medium px-3.5 py-2 rounded-xl transition-all active:scale-95"
+              style={{
+                background: "transparent",
+                border: "1px solid #D4E8C2",
+                color: "#4A6A56",
+                cursor: "pointer"
+              }}
+            >
+              <X size={12} /> Reset Chart
+            </button>
             )}
-
           </div>
-          {hueCols.length > 0 && barKeys.length > 20 && (
-            <p style={{ 
-              color: "#92400E", 
-              fontSize: 12, 
-              marginTop: 8,
-              background: "#FFFBEB",
-              border: "1px solid #FCD34D",
-              borderRadius: 8,
-              padding: "8px 12px"
-            }}>
-              ⚠️ Comparison Column produces <strong>{barKeys.length} unique categories</strong> the chart may be hard to read. It is recommended to select a column with fewer values (e.g., Status, LOB, Deployment Type).`
-            </p>
-          )}
+
+      {hueCols.length > 0 && barKeys.length > 20 && (
+        <div style={{ 
+          color: "#92400E", 
+          fontSize: 12, 
+          marginTop: 8,
+          background: "#FFFBEB",
+          border: "1px solid #FCD34D",
+          borderRadius: 8,
+          padding: "8px 12px",
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+        }}>
+          <AlertTriangle size={14} color="#92400E" />
+          <span>Comparison Column produces <strong>{barKeys.length} unique categories</strong> — the chart may be hard to read. It is recommended to select a column with fewer values (e.g., Status, LOB, Deployment Type).</span>
+        </div>
+      )}
+
         </div>
 
         {show && (
@@ -388,14 +402,14 @@ return (
             </div>
             <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-3">
               {[["Number of Data Displayed", summaryCards.totalData], ["Number of Categories", summaryCards.totalKategori], ["Number of Comparisons", summaryCards.totalPembanding]].map(([label, val]) => (
-                <div key={String(label)} className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
+                <div key={String(label)} className="rounded-xl border border-[#D4E8C2] bg-[#F7F8F5] p-3">
                   <div className="text-xs text-zinc-500">{label}</div>
                   <div className="text-lg font-semibold text-black">{val}</div>
                 </div>
               ))}
             </div>
-            <div className="mb-4 max-h-28 overflow-y-auto rounded-xl border border-zinc-200 bg-zinc-50 p-3">
-              <div className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-500">Color Description</div>
+            <div className="mb-4 max-h-28 overflow-y-auto rounded-xl border border-[#D4E8C2] bg-[#F7F8F5] p-3">
+              <div className="mb-2 text-xs font-bold uppercase tracking-widest text-[#1A4731]">Color Description</div>
               <div className="flex flex-wrap gap-3">
                 {hueCols.length > 0 && barKeys.map(k => (
                   <div key={k} className="flex items-center gap-2 text-sm text-zinc-700">
@@ -485,34 +499,34 @@ return (
               <p className="text-sm text-zinc-500">This chart shows new application additions, reductions due to decommissioning, and the total number of applications at the end of each year.</p>
             </div>
             <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-4">
-              <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
+              <div className="rounded-xl border border-[#D4E8C2] bg-[#F7F8F5] p-3">
                 <div className="text-xs text-zinc-500">Year Range</div>
                 <div className="text-lg font-semibold text-black">{bridgeData[0]?.year} - {bridgeData[bridgeData.length - 1]?.year}</div>
               </div>
-              <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
+              <div className="rounded-xl border border-[#D4E8C2] bg-[#F7F8F5] p-3">
                 <div className="text-xs text-zinc-500">Total New</div>
                 <div className="text-lg font-semibold text-green-600">{bridgeData.reduce((s, i) => s + (Number(i.plus) || 0), 0)}</div>
               </div>
-              <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
+              <div className="rounded-xl border border-[#D4E8C2] bg-[#F7F8F5] p-3">
                 <div className="text-xs text-zinc-500">Total Decommissioned</div>
                 <div className="text-lg font-semibold text-red-600">{bridgeData.reduce((s, i) => s + Math.abs(Number(i.minus) || 0), 0)}</div>
               </div>
-              <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
+              <div className="rounded-xl border border-[#D4E8C2] bg-[#F7F8F5] p-3">
                 <div className="text-xs text-zinc-500">Total Applications (End of Period)</div>
                 <div className="text-lg font-semibold text-blue-600">{bridgeData[bridgeData.length - 1]?.total ?? 0}</div>
               </div>
             </div>
-            <div className="mb-4 rounded-xl border border-blue-100 bg-blue-50 p-4">
-              <div className="mb-2 text-sm font-semibold text-blue-900">How to read this chart</div>
-              <div className="grid gap-2 text-sm text-blue-900 md:grid-cols-2">
+            <div className="mb-4 rounded-xl border border-[#D4E8C2] bg-[#F7F8F5] p-4">
+              <div className="mb-2 text-sm font-semibold text-[#1A4731]">How to read this chart</div>
+              <div className="grid gap-2 text-sm text-[#4A6A56] md:grid-cols-2">
                 <div>• The green bars show the number of new applications per year.</div>
-                <div>• The red bar shows the number of applications that were decommissioned..</div>
-                <div>• The blue bar shows the total applications at the end of that year..</div>
-                <div>• Read the chart from left to right in year order..</div>
+                <div>• The red bar shows the number of applications that were decommissioned.</div>
+                <div>• The blue bar shows the total applications at the end of that year.</div>
+                <div>• Read the chart from left to right in year order.</div>
               </div>
             </div>
-            <div className="mb-4 rounded-xl border border-zinc-200 bg-zinc-50 p-3">
-              <div className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-500">Color Description</div>
+            <div className="mb-4 rounded-xl border border-[#D4E8C2] bg-[#F7F8F5] p-3">
+              <div className="mb-2 text-xs font-bold uppercase tracking-widest text-[#1A4731]">Color Description</div>
               <div className="flex flex-wrap gap-4 text-sm text-zinc-700">
                 <div className="flex items-center gap-2"><span className="inline-block h-3 w-3 rounded-sm bg-blue-600" /><span>Total Applications (End of Year)</span></div>
                 <div className="flex items-center gap-2"><span className="inline-block h-3 w-3 rounded-sm bg-green-600" /><span>New</span></div>
