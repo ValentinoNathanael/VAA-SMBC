@@ -298,24 +298,30 @@ return (
                 value={xCols.map(c => ({ value: c, label: c.trim() }))}
                 onChange={(s) => {
                   const selected = Array.isArray(s) ? s.map((x: any) => x.value) : [];
-                  if (selected.length <= 2) setXCols(selected);
+                  if (selected.length <= 2) {
+                    setXCols(selected);
+                    if (selected.length === 0) setShow(false);
+                  }
                 }}
                 styles={selectStyles} placeholder="Select column(s)..." />
-                <p className="mt-1 text-xs" style={{ color: "#4A6A56" }}>Maximum 2 columns</p>
+                <p className="mt-1 text-xs" style={{ color: "#4A6A56" }}>Required · Maximum 2 columns</p>
             </div>
             <div>
               <label className="block text-xs font-bold mb-2 tracking-widest uppercase" style={{ color: "#1A4731" }}>
-                Comparison Column <span style={{ color: "#4A6A56", fontWeight: 400, textTransform: "none", letterSpacing: 0 }}>(optional)</span>
+                Comparison Column <span style={{ color: "#4A6A56", fontWeight: 400, textTransform: "none", letterSpacing: 0 }}></span>
               </label>
               <Select isMulti
                 options={columns.filter(c => !xCols.includes(c)).map(c => ({ value: c, label: c.trim() }))}
                 value={hueCols.map(c => ({ value: c, label: c.trim() }))}
                 onChange={(s) => {
                   const selected = Array.isArray(s) ? s.map((x: any) => x.value) : [];
-                  if (selected.length <= 2) setHueCols(selected);
+                  if (selected.length <= 2) {
+                    setHueCols(selected);
+                    if (selected.length === 0) setShow(false);
+                  }
                 }}
                 styles={selectStyles} placeholder="Select column(s)..." />
-                <p className="mt-1 text-xs" style={{ color: "#4A6A56" }}>Maximum 2 columns</p> 
+                <p className="mt-1 text-xs" style={{ color: "#4A6A56" }}>Required · Maximum 2 columns</p>
             </div>
           </div>
           {hasStatus && (
@@ -346,7 +352,7 @@ return (
             </div>
           )}
           <div className="mt-6 pt-5 flex items-center gap-4" style={{ borderTop: "1px solid #D4E8C2" }}>
-            <button disabled={!xCols.length} onClick={() => setShow(true)}
+            <button disabled={!xCols.length || !hueCols.length} onClick={() => setShow(true)}
               className="flex items-center gap-2 text-sm font-bold px-6 py-2.5 rounded-xl transition-all disabled:opacity-40"
               style={{ background: "#8DC63F", color: "#1A4731", boxShadow: "0 0 20px rgba(141,198,63,0.2)" }}>
               <Play size={12} color="#1A4731" fill="#1A4731" />

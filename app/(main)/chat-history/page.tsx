@@ -336,7 +336,7 @@ export default function ChatHistoryPage() {
             <Download size={18} color="#1A4731" />
           </div>
           <div>
-            <p style={{ fontSize: 15, fontWeight: 700, color: "#1A4731", margin: 0 }}>Download Result File</p>
+            <p style={{ fontSize: 15, fontWeight: 700, color: "#1A4731", margin: 0 }}>Download File</p>
             <p style={{ fontSize: 12, color: "#4A6A56", margin: 0 }}>Export processed Excel data</p>
           </div>
         </div>

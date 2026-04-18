@@ -31,14 +31,6 @@ export default function DataManagementClient({
             </p>
           </div>
           <div className="grid grid-cols-2 gap-3 md:w-auto">
-            <div className="rounded-2xl border border-[#D4E8C2] bg-[#F7F8F5] px-4 py-3 text-[#1A4731]">
-              <p className="text-xs uppercase tracking-[0.18em] text-[#4A6A56]">Access</p>
-              <p className="mt-1 text-sm font-semibold">{allowUpload ? "Full Access" : "View Only"}</p>
-            </div>
-            <div className="rounded-2xl border border-[#D4E8C2] bg-[#F7F8F5] px-4 py-3 text-[#1A4731]">
-              <p className="text-xs uppercase tracking-[0.18em] text-[#4A6A56]">Module</p>
-              <p className="mt-1 text-sm font-semibold">Upload & History</p>
-            </div>
           </div>
         </div>
       </div>
