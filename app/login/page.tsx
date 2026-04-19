@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 type Role = "spoc" | "internal";
 type Modal = "none" | "change-password";
 
+
 const EyeIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -62,6 +63,8 @@ export default function LoginPage() {
   const router = useRouter();
   const [role, setRole] = useState<Role>("internal");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [changeUsername, setChangeUsername] = useState("");
   const [error, setError] = useState<string>("");
   const [modal, setModal] = useState<Modal>("none");
 
@@ -71,6 +74,7 @@ export default function LoginPage() {
   const [changeError, setChangeError] = useState("");
   const [changeSuccess, setChangeSuccess] = useState("");
   const [changeLoading, setChangeLoading] = useState(false);
+  const [changeUsernameError, setChangeUsernameError] = useState("");
   const [oldPasswordError, setOldPasswordError] = useState("");
   const [newPasswordError, setNewPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
@@ -80,10 +84,7 @@ export default function LoginPage() {
     const res = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        role,
-        password,
-      }),
+      body: JSON.stringify({ role, username, password }),
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
@@ -101,7 +102,10 @@ export default function LoginPage() {
     setConfirmPasswordError("");
 
     let hasError = false;
-
+    if (!changeUsername) {
+      setChangeUsernameError("Username is required");
+      hasError = true;
+    }
     if (!oldPassword) {
       setOldPasswordError("Old password is required");
       hasError = true;
@@ -136,20 +140,25 @@ export default function LoginPage() {
     const loginRes = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ role: "spoc", password: oldPassword }),
+      body: JSON.stringify({ role: "spoc", username: changeUsername, password: oldPassword }),
     });
     if (!loginRes.ok) {
-      setOldPasswordError("Old password is wrong.");
+      const loginData = await loginRes.json().catch(() => ({}));
+      if (loginData?.error === "Username not found") {
+        setChangeUsernameError("Username not found.");
+      } else {
+        setOldPasswordError("Old password is wrong.");
+      }
       return;
     }
 
     setChangeLoading(true);
     try {
-      const res = await fetch("/api/auth/change-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ oldPassword, newPassword }),
-      });
+        const res = await fetch("/api/auth/change-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ oldPassword, newPassword, username: changeUsername }),
+        });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setChangeError(data?.error ?? "Failed to change password.");
@@ -180,6 +189,8 @@ function closeModal() {
   setOldPasswordError("");
   setNewPasswordError("");
   setConfirmPasswordError("");
+  setChangeUsername("");
+  setChangeUsernameError("");
 }
 
   return (
@@ -273,6 +284,16 @@ function closeModal() {
                 </div>
 
                 <div>
+                      <label className="mb-3 block text-sm font-semibold text-gray-700">Username</label>
+                      <input
+                        type="text"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        placeholder="Enter username"
+                        className="w-full rounded-2xl border border-gray-200 bg-gray-50/80 px-4 py-3.5 text-sm text-gray-900 outline-none transition-all duration-200 focus:border-green-700 focus:bg-white"
+                      />
+                </div>
+                <div>
                   <label className="mb-3 block text-sm font-semibold text-gray-700">Password</label>
                   <PasswordInput
                     value={password}
@@ -335,8 +356,20 @@ function closeModal() {
                 </svg>
               </button>
             </div>
-
             <div className="space-y-4">
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-gray-700">Username</label>
+                <input
+                  type="text"
+                  value={changeUsername}
+                  onChange={(e) => setChangeUsername(e.target.value)}
+                  placeholder="Enter your SPOC username"
+                  className="w-full rounded-2xl border border-gray-200 bg-gray-50/80 px-4 py-3.5 text-sm text-gray-900 outline-none transition-all duration-200 focus:border-green-700 focus:bg-white"
+                />
+                {changeUsernameError && (
+                  <p className="mt-1 text-xs text-red-500">{changeUsernameError}</p>
+                )}
+              </div>
               <div>
                 <label className="mb-2 block text-sm font-semibold text-gray-700">Current Password</label>
                 <PasswordInput

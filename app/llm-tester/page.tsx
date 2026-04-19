@@ -130,6 +130,11 @@ useEffect(() => {
       const res = await fetch("/api/auth/me");
       const data = await res.json();
       setRole(data.role || null);
+
+      // Log akses AI Tester jika SPOC
+      if (data.role === "spoc") {
+        await fetch("/api/ai-tester-log", { method: "POST" });
+      }
     } catch {
       setRole(null);
     } finally {
@@ -138,8 +143,6 @@ useEffect(() => {
   }
 
   checkRole();
-
-  // re-cek setiap kali user kembali ke tab ini
   window.addEventListener("focus", checkRole);
   return () => window.removeEventListener("focus", checkRole);
 }, []);
@@ -209,6 +212,7 @@ async function handleVerdict(verdict: "pass" | "fail") {
       engineSummary: debugInfo?.engineSummary || "-",
       reasoning: debugInfo?.reasoning || "-",
       verdict, note,
+      username: role === "spoc" ? "spoc" : "internal",
     }),
   });
 

@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { Database, Eye, BarChart3, Bot } from "lucide-react";
-import { getRole } from "@/lib/auth.server";
+import { getRole, getUsername } from "@/lib/auth.server";
 import GreetingClock from "./GreetingClock";
+import { pool } from "@/lib/db";
+
 
 const steps = [
   { title: "Data Management", desc: "Upload Excel files into the system workspace", icon: Database, num: "01", href: "/data-management" },
@@ -10,8 +12,20 @@ const steps = [
   { title: "Ask AI", desc: "Find information from Excel files with AI assistance", icon: Bot, num: "04", href: "/ask-ai" },
 ];
 
+
+
 export default async function DashboardPage() {
   const role = await getRole();
+  const username = await getUsername();
+
+  let loginHistory: any[] = [];
+  if (role === "spoc") {
+  const result = await pool.query(
+    `SELECT username, role, logged_in_at AS logged_in_at_wib 
+    FROM login_history ORDER BY logged_in_at DESC LIMIT 20`
+  );
+    loginHistory = result.rows;
+  }
 
   const visibleSteps = role === "internal"
     ? steps.filter(s => !["Data Management", "Data Preview"].includes(s.title))
@@ -51,7 +65,8 @@ export default async function DashboardPage() {
           </div>
 
           {/* Tengah — Greeting + Clock */}
-          <GreetingClock role={role} />
+          <GreetingClock role={role} username={username} />
+
 
           {/* Kanan — Stats */}
           <div style={{ display: "flex", flexDirection: "column", gap: 12, minWidth: 168 }}>
@@ -110,6 +125,49 @@ export default async function DashboardPage() {
             );
           })}
         </div>
+        {role === "spoc" && loginHistory.length > 0 && (
+        <div style={{ marginTop: 28 }}>
+          <hr style={{ border: "none", borderTop: "2px solid #D4E8C2", marginBottom: 28 }} />
+          <div style={{ fontSize: 15, fontWeight: 700, color: "#1A4731", marginBottom: 18 }}>Login History</div>
+          <div style={{ borderRadius: 16, border: "1px solid #D4E8C2", overflow: "hidden", maxHeight: 280, overflowY: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+              <thead>
+                <tr style={{ background: "#F4F7F2", borderBottom: "2px solid #8DC63F" }}>
+                  <th style={{ padding: "10px 16px", textAlign: "left", color: "#1A4731", fontWeight: 700, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em" }}>Username</th>
+                  <th style={{ padding: "10px 16px", textAlign: "left", color: "#1A4731", fontWeight: 700, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em" }}>Role</th>
+                  <th style={{ padding: "10px 16px", textAlign: "left", color: "#1A4731", fontWeight: 700, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em" }}>Logged In At</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loginHistory.map((log: any, i: number) => (
+                  <tr key={i} style={{ borderBottom: "1px solid #F0F5EE", background: i % 2 === 0 ? "#ffffff" : "#F7FCF4" }}>
+                    <td style={{ padding: "10px 16px", color: "#1A4731", fontWeight: 600, fontFamily: "monospace" }}>{log.username}</td>
+                    <td style={{ padding: "10px 16px" }}>
+                      <span style={{
+                        background: log.role === "spoc" ? "#EEF7DC" : "#F0F0FF",
+                        border: `1px solid ${log.role === "spoc" ? "#8DC63F" : "#A0A0FF"}`,
+                        borderRadius: 20, padding: "2px 10px", fontSize: 11, fontWeight: 600,
+                        color: log.role === "spoc" ? "#1A4731" : "#3333AA",
+                      }}>
+                        {log.role === "spoc" ? "SPOC" : "Internal User"}
+                      </span>
+                    </td>
+                    <td style={{ padding: "10px 16px", color: "#4A6A56", fontFamily: "monospace", fontSize: 12 }}>
+                    {(() => {
+                      const d = new Date(log.logged_in_at_wib );
+                      const date = d.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+                      const time = d.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }).replace(/\./g, ":");
+                      return `${date}, ${time}`;
+                    })()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
       </div>
     </div>
   );

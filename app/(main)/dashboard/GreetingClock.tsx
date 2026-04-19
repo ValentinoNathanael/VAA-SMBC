@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getRole, getUsername } from "@/lib/auth.server";
 
 const GREETING_LABELS: Record<string, string> = {
   spoc: "Strategic Planning & Operations Control",
@@ -32,7 +33,7 @@ function formatTime(date: Date): string {
   }).replace(/\./g, ":");
 }
 
-export default function GreetingClock({ role }: { role: string | null }) {
+export default function GreetingClock({ role, username }: { role: string | null, username: string | null }) {
   const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {
@@ -41,7 +42,8 @@ export default function GreetingClock({ role }: { role: string | null }) {
     return () => clearInterval(interval);
   }, []);
 
-  const roleLabel = role ? GREETING_LABELS[role] ?? role : "Guest";
+const roleLabel = role ? GREETING_LABELS[role] ?? role : "Guest";
+const displayName = username ?? roleLabel;
 
   return (
     <div style={{
@@ -67,16 +69,9 @@ export default function GreetingClock({ role }: { role: string | null }) {
         {now ? getGreeting() : "—"}
       </div>
 
-      <div style={{
-        fontSize: 13,
-        fontWeight: 600,
-        color: "#1A4731",
-        lineHeight: 1.5,
-        marginBottom: 16,
-        maxWidth: 220,
-      }}>
-        {roleLabel}
-      </div>
+  <div style={{ fontSize: 13, fontWeight: 600, color: "#1A4731", lineHeight: 1.5, marginBottom: 16, maxWidth: 220 }}>
+    {displayName}
+  </div>
 
       {/* Divider */}
       <div style={{ width: 32, height: 1, background: "#D4E8C2", marginBottom: 16 }} />

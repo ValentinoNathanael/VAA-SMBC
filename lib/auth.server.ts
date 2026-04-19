@@ -13,3 +13,8 @@ export async function getActiveFileId(): Promise<string | null> {
   const c = await cookies(); 
   return c.get(ACTIVE_FILE_COOKIE)?.value ?? null;
 }
+
+export async function getUsername(): Promise<string | null> {
+  const c = await cookies();
+  return c.get("vaa_username")?.value ?? null;
+}

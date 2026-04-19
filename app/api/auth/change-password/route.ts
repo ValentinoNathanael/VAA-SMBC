@@ -11,11 +11,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await req.json().catch(() => ({}));
-  const { oldPassword, newPassword } = body as { oldPassword?: string; newPassword?: string };
+ const body = await req.json().catch(() => ({}));
+  const { oldPassword, newPassword, username } = body as { oldPassword?: string; newPassword?: string; username?: string };
 
-  if (!oldPassword || !newPassword) {
-    return NextResponse.json({ ok: false, error: "oldPassword dan newPassword wajib diisi" }, { status: 400 });
+  if (!oldPassword || !newPassword || !username) {
+    return NextResponse.json({ ok: false, error: "Username, oldPassword dan newPassword wajib diisi" }, { status: 400 });
   }
 
     const passwordRules = [
@@ -33,10 +33,16 @@ export async function POST(req: Request) {
       );
     }
 
-  // Ambil hash dari DB
-  const result = await pool.query("SELECT id, password_hash FROM spoc_auth LIMIT 1");
+  // Ambil username dari cookie
+
+
+  // Ambil hash berdasarkan username
+  const result = await pool.query(
+    "SELECT id, password_hash FROM spoc_auth WHERE username = $1",
+    [username]
+  );
   if (result.rows.length === 0) {
-    return NextResponse.json({ ok: false, error: "SPOC belum di-inisialisasi." }, { status: 500 });
+    return NextResponse.json({ ok: false, error: "User not found" }, { status: 404 });
   }
 
   const { id, password_hash } = result.rows[0];
