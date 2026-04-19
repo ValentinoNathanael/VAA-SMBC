@@ -130,11 +130,6 @@ useEffect(() => {
       const res = await fetch("/api/auth/me");
       const data = await res.json();
       setRole(data.role || null);
-
-      // Log akses AI Tester jika SPOC
-      if (data.role === "spoc") {
-        await fetch("/api/ai-tester-log", { method: "POST" });
-      }
     } catch {
       setRole(null);
     } finally {
