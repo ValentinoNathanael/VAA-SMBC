@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { parseExcelBufferToChunks } from "@/lib/excel-parser";
 import { listExcelObjects, getObjectBuffer } from "@/lib/s3";
-import { clearChunkCache } from "@/app/api/ask-ai/route";
+import { chunkCache } from "@/lib/chunk-cache";
 import { buildSchemaFromChunks } from "@/lib/schema-detector";
 
 // Cache schema global
@@ -14,7 +14,7 @@ export function clearSchemaCache() {
 export async function POST() {
   try {
     // 1. Clear semua cache
-    clearChunkCache();
+    chunkCache.clear();
     clearSchemaCache();
     console.log("[Reindex] Cache dihapus, mulai parsing ulang...");
 

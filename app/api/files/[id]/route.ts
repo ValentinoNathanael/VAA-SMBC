@@ -4,6 +4,8 @@ import { pool } from "@/lib/db";
 import { s3, S3_BUCKET } from "@/lib/s3";
 import { ROLE_COOKIE, ACTIVE_FILE_COOKIE } from "@/lib/auth";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { chunkCache } from "@/lib/chunk-cache";
+
 
 export const runtime = "nodejs";
 
@@ -60,6 +62,8 @@ export async function DELETE(
 
     // 3) hapus row di Postgres
     await pool.query(`DELETE FROM uploaded_files WHERE id=$1`, [id]);
+    chunkCache.clear();
+
 
     // 4) jika active file = yang dihapus, clear cookie via response
     const active = cookieStore.get(ACTIVE_FILE_COOKIE)?.value;

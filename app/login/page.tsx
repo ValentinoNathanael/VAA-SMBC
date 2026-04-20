@@ -98,6 +98,7 @@ export default function LoginPage() {
     setChangeError("");
     setChangeSuccess("");
     setOldPasswordError("");
+    setChangeUsernameError("")
     setNewPasswordError("");
     setConfirmPasswordError("");
 

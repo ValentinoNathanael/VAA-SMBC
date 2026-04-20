@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { pool } from "@/lib/db";
 
 // ini yang buat ngatur waktu dia kedeletnya
-const EXPIRY_MINUTES = 2;
+const EXPIRY_MINUTES = 20/60;
 
 // GET — ambil chat history yang belum expired
 export async function GET() {

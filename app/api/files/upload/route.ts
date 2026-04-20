@@ -3,6 +3,7 @@ import { putObject, getObjectBuffer, S3_BUCKET } from "@/lib/s3";
 import { pool } from "@/lib/db";
 import { parseExcelBufferToChunks } from "@/lib/excel-parser";
 import { askNova } from "@/lib/bedrock";
+import { getUsername } from "@/lib/auth.server";
 
 export const runtime = "nodejs";
 
@@ -140,18 +141,20 @@ export async function POST(req: Request) {
     await putObject(objectKey, buffer, file.type || "application/octet-stream");
 
     // UPSERT ke Postgres
+    const username = await getUsername();
     const result = await pool.query(
       `
-      INSERT INTO uploaded_files (file_name, object_key, bucket, uploaded_at)
-      VALUES ($1, $2, $3, NOW())
+      INSERT INTO uploaded_files (file_name, object_key, bucket, uploaded_at, username)
+      VALUES ($1, $2, $3, NOW(), $4)
       ON CONFLICT (file_name)
       DO UPDATE SET
         object_key = EXCLUDED.object_key,
         bucket = EXCLUDED.bucket,
-        uploaded_at = NOW()
+        uploaded_at = NOW(),
+        username = EXCLUDED.username
       RETURNING id
       `,
-      [safeName, objectKey, S3_BUCKET]
+      [safeName, objectKey, S3_BUCKET, username]
     );
 
     // Auto reindex di background

@@ -306,7 +306,7 @@ export default function ChatHistoryPage() {
     fetchChatHistory();
 
     // Auto-refresh setiap 30 detik untuk hapus yang sudah expired
-    const interval = setInterval(fetchChatHistory, 30000);
+    const interval = setInterval(fetchChatHistory, 10000);
     return () => clearInterval(interval);
   }, []);
 

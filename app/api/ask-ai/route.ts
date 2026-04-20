@@ -9,43 +9,48 @@ import { cachedSchema } from "@/app/api/ai/reindex/route";
 import { pool } from "@/lib/db";
 import { executeInstruction, detectDataIssues } from "@/lib/excel-engine";
 
-// ===== IN-MEMORY CACHE =====
-let cachedChunks: ExcelChunk[] | null = null;
-let cacheTimestamp: number | null = null;
-const CACHE_TTL_MS = 1000 * 60 * 30;
+let localCachedSchema: SchemaMap | null = null;
+import { chunkCache } from "@/lib/chunk-cache";
 
-export function clearChunkCache() {
-  cachedChunks = null;
-  cacheTimestamp = null;
-}
+const CACHE_TTL_MS = 1000 * 60 * 30;
 
 async function getChunks(): Promise<ExcelChunk[]> {
   const now = Date.now();
-  if (cachedChunks && cacheTimestamp && now - cacheTimestamp < CACHE_TTL_MS) {
-    console.log("[Cache] Menggunakan cached chunks:", cachedChunks.length);
-    return cachedChunks;
-  }
-  console.log("[Cache] Parsing ulang dari S3...");
   const objects = await listExcelObjects();
+  const fingerprint = objects.map((o) => o.name).sort().join("|");
+
+  if (
+    chunkCache.chunks &&
+    chunkCache.timestamp &&
+    now - chunkCache.timestamp < CACHE_TTL_MS &&
+    chunkCache.fingerprint === fingerprint
+  ) {
+    console.log("[Cache] Menggunakan cached chunks:", chunkCache.chunks.length);
+    return chunkCache.chunks;
+  }
+
+  console.log("[Cache] Parsing ulang dari S3... fingerprint:", fingerprint);
   const allChunks: ExcelChunk[] = [];
   for (const object of objects) {
     const fileBuffer = await getObjectBuffer(object.name);
     const chunks = parseExcelBufferToChunks(fileBuffer, object.name);
     allChunks.push(...chunks);
   }
-  cachedChunks = allChunks;
-  cacheTimestamp = now;
+
+  chunkCache.set(allChunks, fingerprint);
   console.log("[Cache] Cache diperbarui:", allChunks.length, "chunks");
   return allChunks;
 }
 
 async function getSchema(chunks: ExcelChunk[]): Promise<SchemaMap> {
-  if (cachedSchema) {
+  if (chunkCache.schema) {
     console.log("[Schema] Menggunakan cached schema");
-    return cachedSchema;
+    return chunkCache.schema;
   }
   console.log("[Schema] Building schema dari chunks...");
-  return buildSchemaFromChunks(chunks);
+  const schema = buildSchemaFromChunks(chunks);
+  chunkCache.schema = schema;
+  return schema;
 }
 
 function buildAnalysisSystemPrompt(schemaMap: SchemaMap): string {
@@ -798,7 +803,31 @@ if (topNMatch) {
     }
 
     if (!engineResult) {
-      engineResult = { summary: "Tidak ada instruksi yang dieksekusi.", totalCount: 0, items: [] };
+        engineResult = { summary: "Tidak ada instruksi yang dieksekusi.", totalCount: 0, items: [], aggregated: null };
+      }
+
+    const isGeneralOnly = instructions.every((i: any) => i.operation === "general");
+    const isNoData =
+      !isGeneralOnly &&
+      engineResult !== null &&
+      (engineResult.totalCount === 0 || engineResult.totalCount === undefined) &&
+      (!engineResult.items || engineResult.items.length === 0) &&
+      !engineResult.aggregated;
+
+    if (isNoData) {
+      const availableFiles =
+        allChunks.length > 0
+          ? [...new Set(allChunks.map((c) => c.fileName.split("/").pop() || c.fileName))].join(", ")
+          : "tidak ada file yang diunggah";
+      const answer = `Data yang diminta tidak ditemukan di file Excel yang tersedia (${availableFiles}). Pastikan data sudah diunggah dan tersedia di sistem.`;
+      await saveChatHistory(question, answer, instructions[0]?.operation);
+      return NextResponse.json({
+        success: true,
+        answer,
+        dataIssues: [],
+        intent: instructions[0]?.operation,
+        sources: [],
+      });
     }
 
     // Filter issues hanya dari file yang dipakai

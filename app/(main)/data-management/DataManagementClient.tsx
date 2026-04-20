@@ -230,18 +230,19 @@ function HistoryPanel({ role }: { role: UserRole | null }) {
         </div>
 
         <div className="overflow-hidden rounded-[20px] border border-[#D4E8C2] bg-white">
-          <div className={["border-b border-[#D4E8C2] bg-[#F4F7F2] px-5 py-3 text-xs font-semibold uppercase tracking-[0.08em] text-[#3A5A3A]", canDelete ? "grid grid-cols-[200px_1fr_110px]" : "grid grid-cols-[200px_1fr]"].join(" ")}>
-            <div>Timestamp</div>
-            <div>File Name</div>
-            {canDelete && <div className="text-center">Action</div>}
-          </div>
+            <div className={["border-b border-[#D4E8C2] bg-[#F4F7F2] px-5 py-3 text-xs font-semibold uppercase tracking-[0.08em] text-[#3A5A3A]", canDelete ? "grid grid-cols-[200px_1fr_140px_110px]" : "grid grid-cols-[200px_1fr_140px]"].join(" ")}>
+              <div>Timestamp</div>
+              <div>File Name</div>
+              <div>Uploaded by</div>
+              {canDelete && <div className="text-center">Action</div>}
+            </div>
 
           <div className="divide-y divide-[#F0F5EE]">
             {rows.map((r: any, index: number) => {
               const { date, time } = formatDate(r.uploaded_at);
               const isLatest = index === 0;
               return (
-                <div key={r.id} className={["items-center px-5 transition-colors", canDelete ? "grid grid-cols-[200px_1fr_110px]" : "grid grid-cols-[200px_1fr]", isLatest ? "border-l-[3px] border-l-[#4A9B2E] bg-[#F0FAE8] hover:bg-[#E8F7DC]" : "hover:bg-[#F4FBF0]"].join(" ")} style={{ minHeight: "64px" }}>
+                <div key={r.id} className={["items-center px-5 transition-colors", canDelete ? "grid grid-cols-[200px_1fr_140px_110px]" : "grid grid-cols-[200px_1fr_140px]", isLatest ? "border-l-[3px] border-l-[#4A9B2E] bg-[#F0FAE8] hover:bg-[#E8F7DC]" : "hover:bg-[#F4FBF0]"].join(" ")} style={{ minHeight: "64px" }}>
                   <div className="flex flex-col gap-0.5 py-4">
                     <span className="text-xs font-semibold text-[#2C4A2C]">{date}</span>
                     <span className="font-mono text-xs text-[#7AAA7A]">{time}</span>
@@ -258,6 +259,11 @@ function HistoryPanel({ role }: { role: UserRole | null }) {
                         </span>
                       </div>
                     </button>
+                  </div>
+                  <div className="py-4 pr-4">
+                    <span className="text-xs font-medium text-[#4A6A56]">
+                      {r.username || "-"}
+                    </span>
                   </div>
                   {canDelete && (
                     <div className="flex justify-center py-4">
