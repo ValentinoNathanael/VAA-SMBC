@@ -4,6 +4,7 @@ import { pool } from "@/lib/db";
 import { parseExcelBufferToChunks } from "@/lib/excel-parser";
 import { askNova } from "@/lib/bedrock";
 import { getUsername } from "@/lib/auth.server";
+import { chunkCache } from "@/lib/chunk-cache";
 
 export const runtime = "nodejs";
 
@@ -74,7 +75,7 @@ async function runQualityCheck(objectKey: string, fileName: string, fileId: stri
 
     const userPrompt = `Analisis data berikut dan flag nilai yang aneh/random/tidak wajar:\n\n${csvSample}`;
 
-    const result = await askNova({ systemPrompt, userPrompt, maxTokens: 1000 });
+    const result = await askNova({ systemPrompt, userPrompt, maxTokens: 4000 });
     console.log("[QualityCheck] Raw result:", result);
 
     let issues: any[] = [];
@@ -158,10 +159,8 @@ export async function POST(req: Request) {
     );
 
     // Auto reindex di background
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-    fetch(`${baseUrl}/api/ai/reindex`, { method: "POST" })
-      .then(() => console.log("[Upload] Auto reindex selesai"))
-      .catch((err) => console.warn("[Upload] Auto reindex gagal:", err));
+    chunkCache.clear();
+    console.log("[Upload] Cache di-clear setelah upload");
 
     // Auto quality check di background
     runQualityCheck(objectKey, safeName, String(result.rows[0].id))

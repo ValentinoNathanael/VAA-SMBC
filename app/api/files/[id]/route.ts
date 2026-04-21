@@ -60,6 +60,11 @@ export async function DELETE(
       console.warn("S3 removeObject failed:", e);
     }
 
+
+    await pool.query(
+      `DELETE FROM data_quality_issues WHERE file_id = $1`,
+      [id]
+    );
     // 3) hapus row di Postgres
     await pool.query(`DELETE FROM uploaded_files WHERE id=$1`, [id]);
     chunkCache.clear();
