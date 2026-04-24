@@ -31,7 +31,7 @@ export async function POST(req: Request) {
     return res;
   }
 
-  if (role === "spoc") {
+  if (role === "spoc") {  
     if (!username || !password) {
       return NextResponse.json({ ok: false, error: "Username and password are required" }, { status: 400 });
     }

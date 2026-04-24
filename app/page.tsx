@@ -127,7 +127,8 @@ export default function Home() {
         <div className="mt-10">
           <Link
             href="/login"
-            className="inline-flex items-center gap-2 rounded-full px-8 py-3 text-sm font-semibold transition-all duration-200 active:scale-95"
+            className="inline-flex items-center gap-2 rounded-full px-8 py-3 text-sm font-semibold 
+            transition-all duration-200 active:scale-95"
             style={{
               background: "rgba(255,255,255,0.92)",
               color: "#111",
@@ -135,12 +136,12 @@ export default function Home() {
               letterSpacing: "-0.01em",
             }}
             onMouseEnter={e => {
-              (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,1)";
-              (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 20px rgba(0,0,0,0.25)";
-            }}
-            onMouseLeave={e => {
               (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.92)";
               (e.currentTarget as HTMLElement).style.boxShadow = "0 2px 12px rgba(0,0,0,0.2)";
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.background = "rgbargba(200,200,200,1)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 20px rgba(0,0,0,0.25)";
             }}
           >
             Continue

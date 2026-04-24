@@ -33,9 +33,6 @@ export async function POST(req: Request) {
       );
     }
 
-  // Ambil username dari cookie
-
-
   // Ambil hash berdasarkan username
   const result = await pool.query(
     "SELECT id, password_hash FROM spoc_auth WHERE username = $1",

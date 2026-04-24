@@ -272,7 +272,8 @@ function closeModal() {
                       </div>
                     </label>
 
-                    <label className={`cursor-pointer rounded-2xl border p-4 transition-all duration-200 ${role === "internal" ? "border-green-800 bg-green-50 shadow-sm" : "border-gray-200 bg-white hover:border-green-300 hover:bg-green-50/40"}`}>
+                    <label className={`cursor-pointer rounded-2xl border p-4 transition-all duration-200 ${role === "internal" ?
+                      "border-green-800 bg-green-50 shadow-sm" : "border-gray-200 bg-white hover:border-green-300 hover:bg-green-50/40"}`}>
                       <div className="flex items-start gap-4">
                         <input type="radio" checked={role === "internal"} onChange={() => setRole("internal")} className="mt-1 h-4 w-4 accent-green-800" />
                         <div>

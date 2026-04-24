@@ -22,6 +22,12 @@ export function middleware(req: NextRequest) {
 
   const role = req.cookies.get("vaa_role")?.value;
 
+  if (!role) {
+  const url = req.nextUrl.clone();
+  url.pathname = "/login";
+  return NextResponse.redirect(url);
+}
+
 if (role === "internal" && (
   pathname.startsWith("/data-management") ||
   pathname.startsWith("/data-preview")
