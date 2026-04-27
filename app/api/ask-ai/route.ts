@@ -340,6 +340,7 @@ export async function POST(req: NextRequest) {
 
     // 2. LLM TAHAP 1 — analisis pertanyaan
     console.log("[LLM Tahap 1] Menganalisis pertanyaan...");
+
     const rawInstructions = await askNovaJSON(buildAnalysisSystemPrompt(schemaMap), question);
     
     const rawList = Array.isArray(rawInstructions) ? rawInstructions : [rawInstructions];
@@ -398,10 +399,7 @@ if (topNMatch) {
   });
 }
 
-
     console.log("[LLM Tahap 1] Instruksi final:", instructions);
-
-    // Auto-fix: kalau sum di activo dengan column Harga Perolehan
     const biayaKeywords = ["biaya", "cost", "opex", "pengeluaran", "maintenance"];
     const isBiayaQuery = biayaKeywords.some(kw => questionLower.includes(kw));
 
@@ -569,7 +567,10 @@ if (topNMatch) {
       for (const instruction of instructions.filter((i: any) => i.operation !== "filter")) {
         if (instruction.operation === "general" && !instruction.file && !instruction.column && !instruction.value && !instruction.entity) continue;
         console.log("[Engine] Executing (post multi-col filter):", instruction);
+  
         const stepResult = executeInstruction(workingChunks, instruction, allChunks);
+
+    
         if (instruction.operation === "count") {
           engineResult = {
             ...engineResult,

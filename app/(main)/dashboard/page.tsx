@@ -18,6 +18,9 @@ export default async function DashboardPage() {
   const role = await getRole();
   const username = await getUsername();
 
+  {/* Tengah — Greeting + Clock */}
+  <GreetingClock role={role} username={username} />
+
   let loginHistory: any[] = [];
   if (role === "spoc") {
   const result = await pool.query(
@@ -64,8 +67,7 @@ export default async function DashboardPage() {
             </p>
           </div>
 
-          {/* Tengah — Greeting + Clock */}
-          <GreetingClock role={role} username={username} />
+
 
 
           {/* Kanan — Stats */}

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getRole, getUsername } from "@/lib/auth.server";
 
 const GREETING_LABELS: Record<string, string> = {
   spoc: "Strategic Planning & Operations Control",
@@ -33,7 +32,7 @@ function formatTime(date: Date): string {
   }).replace(/\./g, ":");
 }
 
-export default function GreetingClock({ role, username }: { role: string | null, username: string | null }) {
+  export default function GreetingClock({ role, username }: { role: string | null, username: string | null }) {
   const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {

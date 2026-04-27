@@ -3,8 +3,8 @@ import { getObjectBuffer } from "@/lib/s3";
 
 export async function GET(req: NextRequest) {
   try {
-    const objectKey = req.nextUrl.searchParams.get("key");
 
+    const objectKey = req.nextUrl.searchParams.get("key");
     if (!objectKey) {
       return new Response(
         JSON.stringify({
@@ -21,7 +21,6 @@ export async function GET(req: NextRequest) {
     const buffer = await getObjectBuffer(objectKey);
     const fileName = objectKey.split("/").pop() || "download.xlsx";
     const fileBytes = new Uint8Array(buffer);
-
     return new Response(fileBytes, {
       status: 200,
       headers: {
@@ -30,6 +29,8 @@ export async function GET(req: NextRequest) {
         "Content-Disposition": `attachment; filename="${fileName}"`,
       },
     });
+
+
   } catch (error) {
     console.error("Download failed:", error);
 

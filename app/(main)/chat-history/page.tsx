@@ -270,16 +270,22 @@ function ChatCard({ item }: { item: ChatHistoryItem }) {
 }
 
 export default function ChatHistoryPage() {
+
   const [files, setFiles] = useState<FileItem[]>([]);
   const [selectedFile, setSelectedFile] = useState("");
+
   const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
+
+
   const [downloadSuccess, setDownloadSuccess] = useState(false);
 
   useEffect(() => {
     const fetchFiles = async () => {
       try {
+
         const res = await fetch("/api/files");
+
         const data = await res.json();
         if (data.items && Array.isArray(data.items)) {
           setFiles(data.items);
@@ -341,23 +347,30 @@ export default function ChatHistoryPage() {
           </div>
         </div>
         <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+      
           <select
             value={selectedFile}
             onChange={(e) => setSelectedFile(e.target.value)}
-            style={{ flex: 1, minWidth: 200, background: "#F7F8F5", border: "1px solid #D4E8C2", borderRadius: 12, padding: "10px 16px", color: "#1A4731", fontSize: 13, outline: "none" }}
+            style={{ flex: 1, minWidth: 200, background: "#F7F8F5", border: "1px solid #D4E8C2", 
+              borderRadius: 12, padding: "10px 16px", color: "#1A4731", fontSize: 13, outline: "none" }}
           >
             <option value="" style={{ background: "#ffffff" }}>Select file</option>
             {files.map((file) => (
               <option key={file.id} value={file.object_key} style={{ background: "#ffffff" }}>{file.file_name}</option>
             ))}
           </select>
+    
           <button
             onClick={handleDownload}
             disabled={!selectedFile}
-            style={{ background: selectedFile ? "#8DC63F" : "#EEF7DC", color: selectedFile ? "#1A4731" : "#4A6A56", border: "none", borderRadius: 12, padding: "10px 24px", fontSize: 13, fontWeight: 700, cursor: selectedFile ? "pointer" : "not-allowed", transition: "all 0.2s", whiteSpace: "nowrap", opacity: selectedFile ? 1 : 0.6 }}
+            style={{ background: selectedFile ? "#8DC63F" : "#EEF7DC", color: selectedFile ? 
+              "#1A4731" : "#4A6A56", border: "none", borderRadius: 12, padding: "10px 24px", 
+              fontSize: 13, fontWeight: 700, cursor: selectedFile ? "pointer" : "not-allowed", 
+              transition: "all 0.2s", whiteSpace: "nowrap", opacity: selectedFile ? 1 : 0.6 }}
           >
             Download Here
           </button>
+    
           {/* Toast notification */}
           {downloadSuccess && (
             <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#EEF7DC", border: "1px solid #8DC63F", borderRadius: 10, padding: "8px 14px", marginTop: 12, width: "100%" }}>
@@ -398,9 +411,12 @@ export default function ChatHistoryPage() {
           <div style={{ padding: "40px 0", textAlign: "center", color: "#4A6A56", fontSize: 13, border: "1px dashed #D4E8C2", borderRadius: 12 }}>Empty Chat</div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 12, maxHeight: 600, overflowY: "auto", paddingRight: 4 }}>
+  
             {chatHistory.map((item) => (
               <ChatCard key={item.id} item={item} />
             ))}
+
+  
           </div>
         )}
       </div>

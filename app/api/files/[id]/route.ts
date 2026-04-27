@@ -25,8 +25,8 @@ export async function DELETE(
     }
 
     const cookieStore = await cookies();
-    const role = cookieStore.get(ROLE_COOKIE)?.value ?? null;
 
+    const role = cookieStore.get(ROLE_COOKIE)?.value ?? null;
     if (role !== "spoc") {
       return NextResponse.json(
         { ok: false, error: "Forbidden (SPOC only)" },
@@ -56,6 +56,8 @@ export async function DELETE(
         Bucket: bucket || S3_BUCKET,
         Key: objectKey,
       }));
+
+
     } catch (e) {
       console.warn("S3 removeObject failed:", e);
     }

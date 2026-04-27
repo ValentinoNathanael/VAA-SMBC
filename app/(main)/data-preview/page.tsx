@@ -23,7 +23,6 @@ export default function DataPreviewPage() {
   const [files, setFiles] = useState<FileItem[]>([]);
   const [selectedFileId, setSelectedFileId] = useState<string>("");
   const [loading, setLoading] = useState(false);
-
   const [columns, setColumns] = useState<string[]>([]);
   const [selectedCols, setSelectedCols] = useState<Set<string>>(new Set());
   const [rows, setRows] = useState<Record<string, any>[]>([]);
@@ -37,10 +36,8 @@ export default function DataPreviewPage() {
       fetch("/api/files", { cache: "no-store" }),
       fetch("/api/active-file", { cache: "no-store" }),
     ]);
-
     const filesJson = await filesRes.json();
     const activeJson = await activeRes.json().catch(() => ({}));
-
     const items: FileItem[] = (filesJson.items ?? filesJson.data ?? []).map((r: any) => ({
       id: String(r.id),
       file_name: String(r.file_name ?? r.name ?? ""),
@@ -48,14 +45,13 @@ export default function DataPreviewPage() {
       bucket: r.bucket,
       object_key: r.object_key,
     }));
-
     setFiles(items);
-
     const activeId = String(activeJson?.fileId ?? "");
     const exists = items.some((x) => x.id === activeId);
     if (activeId && exists) setSelectedFileId(activeId);
     else if (items.length) setSelectedFileId(items[0].id);
   }
+
 
   async function safeJson(res: Response) {
     const text = await res.text();
@@ -69,7 +65,6 @@ export default function DataPreviewPage() {
 
   async function loadPreview(sheetOverride?: string) {
     if (!selectedFileId) return;
-
     setLoading(true);
     try {
       const s = await fetch("/api/active-file", {
@@ -77,21 +72,17 @@ export default function DataPreviewPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fileId: selectedFileId }),
       });
-
       const sData: any = await safeJson(s);
       if (!s.ok) {
         throw new Error(sData?.error ?? "Failed to set active file");
       }
-
       const sheet = sheetOverride ?? selectedSheet;
       const query = sheet ? `?all=true&sheet=${encodeURIComponent(sheet)}` : "?all=true";
       const res = await fetch(`/api/preview${query}`, { cache: "no-store" });
       const data: any = await safeJson(res);
-
       if (!res.ok) {
         throw new Error(data?.error ?? "Failed to preview");
       }
-
       setColumns(data.columns ?? []);
       setRows(data.rows ?? []);
       setMeta({
@@ -100,7 +91,6 @@ export default function DataPreviewPage() {
         totalRows: data.totalRows,
         fileId: data.fileId,
       });
-
       if (data.sheetName) setSelectedSheet(data.sheetName);
       setSelectedCols(new Set(data.columns ?? []));
     } finally {
@@ -108,10 +98,7 @@ export default function DataPreviewPage() {
     }
   }
 
-  useEffect(() => {
-    loadFiles();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  useEffect(() => {loadFiles();}, []);
 
   const selectedColumnsArray = useMemo(() => Array.from(selectedCols), [selectedCols]);
 
@@ -404,18 +391,16 @@ export default function DataPreviewPage() {
                   }}
                 >
                   {selectedColumnsArray.map((c, ci) => {
+
                     const MONTH_COLS = ["januari","febuari","februari","maret","april","mei","juni",
                       "juli","agustus","september","oktober","november","desember"];
-
                     const isDateCol = c.toLowerCase().includes("date") ||
                       c.toLowerCase().includes("tanggal") ||
                       c.toLowerCase().includes("live") ||
                       c.toLowerCase().includes("decom");
-
                     const isMoneyCol = MONTH_COLS.includes(c.toLowerCase().trim()) ||
                       c.toLowerCase().includes("harga") ||
                       c.toLowerCase().includes("nilai");
-
                     const raw = r[c];
                     const val = isDateCol
                       ? excelDateToString(raw)
@@ -423,6 +408,8 @@ export default function DataPreviewPage() {
                         ? `Rp ${Number(raw).toLocaleString("id-ID")}`
                         : String(raw ?? "");
                     const isStatus = c.toLowerCase() === "status";
+
+
                     const isActive = val.toLowerCase() === "active";
 
                     return (

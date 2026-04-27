@@ -43,9 +43,7 @@ export async function askNova({
       topP: 0.9,
     },
   });
-
   const response = await bedrockClient.send(command);
-
   return (
     response?.output?.message?.content?.[0]?.text ||
     "Saya tidak menemukan data pendukung di file Excel yang tersedia."

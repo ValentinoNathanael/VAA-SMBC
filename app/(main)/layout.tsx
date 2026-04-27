@@ -38,13 +38,14 @@ export default function MainLayout({
     const [role, setRole] = useState<string | null>(null);
 
     useEffect(() => {
-      fetch("/api/auth/me")
+    fetch("/api/auth/me")
         .then((r) => r.json())
         .then((d) => setRole(d.role || null))
         .catch(() => setRole(null));
     }, []);
+
     const activeMenu = MENUS.find((m) => pathname === m.href);
-    const activeLabel = activeMenu?.label ?? "Dashboard";
+    const activeLabel = activeMenu?.label ?? "Not Found";
 
     const handleLogout = async () => {
         await fetch("/api/auth/logout", { method: "POST" });
@@ -121,7 +122,8 @@ export default function MainLayout({
                             return !["Data Management", "Data Preview"].includes(item.label);
                         }
                         return true;
-                        }).map((item) => {
+                        })
+                        .map((item) => {
                         const isActive = pathname === item.href;
                         const Icon = item.icon;
                         return (

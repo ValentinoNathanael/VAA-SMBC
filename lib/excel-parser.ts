@@ -61,13 +61,11 @@ export function parseExcelBufferToChunks(
       }
       return newRow;
     });
-
     normalizedRows.forEach((row, index) => {
       const chunk = rowToChunkText(fileName, sheetName, index + 2, row);
       chunks.push(chunk);
     });
   }
-
   return chunks;
 }
 

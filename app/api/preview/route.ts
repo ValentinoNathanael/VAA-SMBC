@@ -20,17 +20,16 @@ function streamToBuffer(stream: any): Promise<Buffer> {
 export async function GET(request: Request) {
   try {
     const cookieStore = await cookies();
+
     const fileId = cookieStore.get(ACTIVE_FILE_COOKIE)?.value;
     if (!fileId) {
       return NextResponse.json({ ok: false, error: "No active file selected" }, { status: 400 });
     }
-
-    // 1) Ambil metadata dari Postgres (bucket + object_key)
     const { rows } = await pool.query(
-      `SELECT id, file_name, bucket, object_key
-       FROM uploaded_files
-       WHERE id = $1
-       LIMIT 1`,
+        `SELECT id, file_name, bucket, object_key
+        FROM uploaded_files
+        WHERE id = $1
+        LIMIT 1`,
       [Number(fileId)]
     );
 
@@ -39,12 +38,9 @@ export async function GET(request: Request) {
     }
 
     const meta = rows[0];
+
     const objectKey = meta.object_key;
-
-    // 2) Ambil file dari MinIO pakai object_key (bukan id)
     const buf = await getObjectBuffer(objectKey);
-
-    // 3) Parse Excel
     const wb = XLSX.read(buf, { type: "buffer" });
 
     // ✅ ambil semua nama sheet
@@ -74,11 +70,13 @@ export async function GET(request: Request) {
       fileId: String(meta.id),
       fileName: meta.file_name,
       sheetName,
-      sheetNames,   // ✅ list semua sheet dikirim ke frontend
+      sheetNames,   
       totalRows: json.length,
       columns,
       rows: rowsPreview,
     });
+
+
   } catch (e: any) {
     console.error("preview error:", e);
     return NextResponse.json({ ok: false, error: e?.message ?? "Preview failed" }, { status: 500 });

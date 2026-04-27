@@ -13,7 +13,6 @@ export const s3 = new S3Client({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
   },
 });
-
 export const S3_BUCKET = process.env.S3_BUCKET || "vaa-web-storage-jakarta-768669378515-ap-southeast-3-an";
 
 export async function listExcelObjects(): Promise<{ name: string }[]> {
@@ -39,10 +38,8 @@ export async function getObjectBuffer(objectKey: string): Promise<Buffer> {
     Bucket: S3_BUCKET,
     Key: objectKey,
   });
-
   const response = await s3.send(command);
   const stream = response.Body as Readable;
-
   return new Promise((resolve, reject) => {
     const chunks: Buffer[] = [];
     stream.on("data", (chunk) => chunks.push(chunk));

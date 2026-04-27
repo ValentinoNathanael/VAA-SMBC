@@ -109,6 +109,8 @@ useEffect(() => {
 const statusKey = useMemo(() => findCol(columns, "Status"), [columns]);
 const liveKey   = useMemo(() => findCol(columns, "Date_Live", "Date_LIve", "DateLive", "date live"), [columns]);
 const decomKey  = useMemo(() => findCol(columns, "Date_Decom", "Date_Decomm", "DateDecom", "date decom"), [columns]);
+
+
 const hasStatus = useMemo(() => !!statusKey, [statusKey]);
 
 const statusOptions = useMemo(() => {
@@ -262,6 +264,7 @@ return (
           </label>
           <select
             value={selectedFileId}
+
             onChange={(e) => {
               setSelectedFileId(e.target.value);
               setShow(false);
@@ -269,6 +272,8 @@ return (
               setHueCols([]);
               loadPreviewData(e.target.value);
             }}
+
+
             style={{
               background: "#F7F8F5", border: "1px solid #D4E8C2",
               borderRadius: 10, padding: "6px 12px",
@@ -296,6 +301,7 @@ return (
               <Select isMulti
                 options={columns.filter(c => !hueCols.includes(c)).map(c => ({ value: c, label: c.trim() }))}
                 value={xCols.map(c => ({ value: c, label: c.trim() }))}
+
                 onChange={(s) => {
                   const selected = Array.isArray(s) ? s.map((x: any) => x.value) : [];
                   if (selected.length <= 2) {
@@ -303,6 +309,7 @@ return (
                     if (selected.length === 0) setShow(false);
                   }
                 }}
+
                 styles={selectStyles} placeholder="Select column(s)..." />
                 <p className="mt-1 text-xs" style={{ color: "#4A6A56" }}>Required · Maximum 2 columns</p>
             </div>
@@ -313,6 +320,7 @@ return (
               <Select isMulti
                 options={columns.filter(c => !xCols.includes(c)).map(c => ({ value: c, label: c.trim() }))}
                 value={hueCols.map(c => ({ value: c, label: c.trim() }))}
+
                 onChange={(s) => {
                   const selected = Array.isArray(s) ? s.map((x: any) => x.value) : [];
                   if (selected.length <= 2) {
@@ -320,6 +328,7 @@ return (
                     if (selected.length === 0) setShow(false);
                   }
                 }}
+
                 styles={selectStyles} placeholder="Select column(s)..." />
                 <p className="mt-1 text-xs" style={{ color: "#4A6A56" }}>Required · Maximum 2 columns</p>
             </div>
@@ -335,7 +344,8 @@ return (
                   const checked = statusSelected.includes(s);
                   return (
                     <button key={s}
-                      onClick={() => setStatusSelected(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])}
+                      onClick={() => setStatusSelected(prev => prev.includes(s) 
+                        ? prev.filter(x => x !== s) : [...prev, s])}
                       className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all"
                       style={{
                         background: checked ? "#8DC63F" : "#F7F8F5",
@@ -367,7 +377,8 @@ return (
                 setHueCols([]);
                 setXCols([]);
               }}
-              className="reset-btn flex items-center gap-1.5 text-xs font-medium px-3.5 py-2 rounded-xl transition-all active:scale-95"
+              className="reset-btn flex items-center gap-1.5 text-xs font-medium 
+              px-3.5 py-2 rounded-xl transition-all active:scale-95"
               style={{
                 background: "transparent",
                 border: "1px solid #D4E8C2",
@@ -377,6 +388,7 @@ return (
             >
               <X size={12} /> Reset Chart
             </button>
+  
             )}
           </div>
 
@@ -427,9 +439,16 @@ return (
             </div>
             <div style={{ height: "450px" }}>
               <ResponsiveContainer width="100%" height="100%">
+          
                 <BarChart data={chartDataWithTotal} margin={{ top: 32, right: 20, left: 0, bottom: 40 }}>
+          
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="x" tick={{ fill: "#111", fontSize: 12 }} tickFormatter={v => shortenLabel(makeXTickLabelFromFull(String(v)), 14)} interval={0} angle={-15} textAnchor="end" height={70} />
+
+                  <XAxis dataKey="x" tick={{ fill: "#111", fontSize: 12 }} 
+                  tickFormatter={v => shortenLabel(makeXTickLabelFromFull(String(v)), 14)} 
+                  interval={0} angle={-15} textAnchor="end" height={70} />
+
+
                   <Customized component={(props: any) => {
                     const { xAxisMap, height } = props;
                     const xScale = xAxisMap?.[0]?.scale;
@@ -453,7 +472,10 @@ return (
                       </g>
                     );
                   }} />
+            
                   <YAxis tick={{ fill: "#111" }} />
+
+
                   <Tooltip
                     contentStyle={{ backgroundColor: "#fff", border: "1px solid #e5e7eb", borderRadius: "12px", color: "#111" }}
                     labelStyle={{ color: "#111", fontWeight: 600 }}
@@ -464,7 +486,11 @@ return (
                       return [value, name];
                     }}
                   />
-                  {barKeys.map(k => <Bar key={k} dataKey={k} stackId={hueCols.length ? "a" : undefined} fill={stringToColor(k)} radius={[4, 4, 0, 0]} />)}
+            
+                  {barKeys.map(k => <Bar key={k} dataKey={k} stackId={hueCols.length ? "a" : undefined} 
+                  fill={stringToColor(k)} radius={[4, 4, 0, 0]} />)}
+
+              
                   <Bar dataKey="_total" stackId="__label__" fill="transparent" stroke="none" legendType="none" isAnimationActive={false}
                     label={(props: any) => {
                       const { x, y, width, value } = props;
@@ -474,7 +500,8 @@ return (
                       return (
                         <g>
                           <rect x={cx - labelW / 2} y={y - 20} width={labelW} height={16} rx={4} fill="white" stroke="#e5e7eb" strokeWidth={1} />
-                          <text x={cx} y={y - 8} textAnchor="middle" dominantBaseline="middle" fontSize={11} fontWeight={700} fill="#111">{value}</text>
+                          <text x={cx} y={y - 8} textAnchor="middle" dominantBaseline="middle" fontSize={11} 
+                          fontWeight={700} fill="#111">{value}</text>
                         </g>
                       );
                     }}
@@ -498,7 +525,9 @@ return (
             {!decomKey && <span className="block mt-1">• Date_Decom column not found</span>}
             {!statusKey && <span className="block mt-1">• Status column not found</span>}
           </div>
-        ) : (
+        ) 
+        
+        : (
           <>
             <div className="mb-4">
               <h2 className="text-lg font-semibold text-black">Total Application Change per Year</h2>
@@ -543,8 +572,11 @@ return (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={bridgeData} margin={{ top: 20, right: 20, left: 0, bottom: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                
                   <XAxis dataKey="year" tick={{ fill: "#111", fontSize: 12 }} />
+                
                   <YAxis tick={{ fill: "#111", fontSize: 12 }} allowDecimals={false} />
+      
                   <Tooltip contentStyle={{ backgroundColor: "#fff", border: "1px solid #e5e7eb", borderRadius: "12px", color: "#111" }}
                     labelStyle={{ color: "#111", fontWeight: 600 }}
                     formatter={(val: any, name: any) => {

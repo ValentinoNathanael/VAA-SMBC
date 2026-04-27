@@ -104,12 +104,9 @@ export function retrieveRelevantChunks(
   const rawTokens = tokenize(question);
   const qTokens = expandTokens(rawTokens);
   const qPhrase = question.toLowerCase();
-
   const scored = chunks.map((chunk) => {
     const searchText = chunk.searchText;
     let score = 0;
-
-    // 1. Token matching dengan sinonim
     for (const token of qTokens) {
       if (searchText.includes(token)) {
         score += 1;
@@ -147,11 +144,13 @@ export function retrieveRelevantChunks(
       const statusValue = String(chunk.row["Status"] || "").toLowerCase();
       if (statusValue && qPhrase.includes(statusValue)) {
         score += 5;}
+  
     return { chunk, score };
   });
     
 
   const filtered = scored.filter((item) => item.score > 0);
+
   const dynamicTopN = filtered.length < topN ? filtered.length : topN;
 
   return filtered

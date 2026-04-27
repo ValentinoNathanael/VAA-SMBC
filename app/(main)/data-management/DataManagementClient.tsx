@@ -45,7 +45,6 @@ export default function DataManagementClient({
           className={["rounded-full px-6 py-2.5 text-sm font-semibold transition-all duration-200", tab === "history" ? "bg-[#8DC63F] text-[#1A4731] shadow-md" : "text-[#4A6A56] hover:bg-[#EEF7DC] hover:text-[#1A4731]"].join(" ")}
         >History File</button>
       </div>
-
       <div>
         {tab === "upload" ? <UploadPanel allowUpload={allowUpload} /> : <HistoryPanel role={role} />}
       </div>
@@ -68,8 +67,9 @@ function UploadPanel({ allowUpload }: { allowUpload: boolean }) {
       return;
     }
     setUploading(true);
-    try {
-      const form = new FormData();
+    try 
+
+    { const form = new FormData();
       form.append("file", file);
       const res = await fetch("/api/files/upload", { method: "POST", body: form });
       if (!res.ok) throw new Error("Upload failed");
@@ -87,6 +87,7 @@ function UploadPanel({ allowUpload }: { allowUpload: boolean }) {
       setUploading(false);
       e.target.value = "";
     }
+
   }
 
   return (
@@ -121,15 +122,25 @@ function UploadPanel({ allowUpload }: { allowUpload: boolean }) {
               </div>
               <div className="mt-8 flex flex-col gap-4 border-t border-[#1A4731]/10 pt-5 md:flex-row md:items-center md:justify-between">
                 <div className="text-sm">
+      
                   {allowUpload ? (
                     <span className="font-medium text-[#1A4731]">Access granted. You can upload file.</span>
                   ) : (
-                    <span className="font-medium text-[#4A6A56]">Upload only for <span className="font-semibold text-[#1A4731]">Strategic Planning & Operations Control</span>. You can still access file history.</span>
+                    <span className="font-medium text-[#4A6A56]">Upload only for <span className="font-semibold text-[#1A4731]"
+                    >Strategic Planning & Operations Control</span>. You can still access file history.</span>
                   )}
+    
                 </div>
                 <label className={["inline-flex cursor-pointer items-center justify-center rounded-full px-6 py-3 text-sm font-semibold shadow-sm transition-all duration-200", !allowUpload || uploading ? "cursor-not-allowed bg-white/60 text-[#4A6A56]/50" : "bg-[#1A4731] text-white hover:-translate-y-0.5 hover:bg-[#15392A] active:scale-95"].join(" ")}>
                   {uploading ? "Uploading..." : "Browse Files"}
-                  <input type="file" className="hidden" accept=".xlsx,.xls" disabled={!allowUpload || uploading} onChange={handleFileChange} />
+
+
+                  <input type="file" className="hidden" accept=".xlsx,.xls" disabled={!allowUpload || uploading} 
+                  onChange={handleFileChange} />
+
+
+
+                  
                 </label>
               </div>
             </div>
@@ -141,9 +152,9 @@ function UploadPanel({ allowUpload }: { allowUpload: boolean }) {
 }
 
 function HistoryPanel({ role }: { role: UserRole | null }) {
+
   const canDelete = role === "spoc";
   const router = useRouter();
-
   const [rows, setRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -157,8 +168,8 @@ function HistoryPanel({ role }: { role: UserRole | null }) {
     setRows(json.items ?? json.data ?? []);
     setLoading(false);
   }
-
   useEffect(() => { load(); }, []);
+
 
   function formatDate(ts: string) {
     const d = new Date(ts);
@@ -179,7 +190,6 @@ function HistoryPanel({ role }: { role: UserRole | null }) {
   function openDeleteModal(fileId: string, fileName: string) {
     setDeleteModal({ id: fileId, name: fileName });
   }
-
   async function confirmDelete() {
     if (!deleteModal) return;
     const { id, name } = deleteModal;
@@ -230,7 +240,8 @@ function HistoryPanel({ role }: { role: UserRole | null }) {
         </div>
 
         <div className="overflow-hidden rounded-[20px] border border-[#D4E8C2] bg-white">
-            <div className={["border-b border-[#D4E8C2] bg-[#F4F7F2] px-5 py-3 text-xs font-semibold uppercase tracking-[0.08em] text-[#3A5A3A]", canDelete ? "grid grid-cols-[200px_1fr_140px_110px]" : "grid grid-cols-[200px_1fr_140px]"].join(" ")}>
+            <div className={["border-b border-[#D4E8C2] bg-[#F4F7F2] px-5 py-3 text-xs font-semibold uppercase tracking-[0.08em] text-[#3A5A3A]", 
+              canDelete ? "grid grid-cols-[200px_1fr_140px_110px]" : "grid grid-cols-[200px_1fr_140px]"].join(" ")}>
               <div>Timestamp</div>
               <div>File Name</div>
               <div>Uploaded by</div>
@@ -285,7 +296,8 @@ function HistoryPanel({ role }: { role: UserRole | null }) {
 
       {/* Delete Confirmation Modal */}
       {deleteModal && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center", padding: "0 16px" }}
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 50, display: "flex",
+          alignItems: "center", justifyContent: "center", padding: "0 16px" }}
           onClick={(e) => e.target === e.currentTarget && setDeleteModal(null)}
         >
           <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl">
@@ -309,18 +321,23 @@ function HistoryPanel({ role }: { role: UserRole | null }) {
             </div>
 
             <div className="flex gap-3">
+
               <button
                 onClick={() => setDeleteModal(null)}
-                className="flex-1 rounded-2xl border border-[#D4E8C2] px-4 py-3 text-sm font-semibold text-[#4A6A56] transition-all hover:bg-[#F7F8F5]"
+                className="flex-1 rounded-2xl border border-[#D4E8C2] px-4 py-3 text-sm font-semibold
+                text-[#4A6A56] transition-all hover:bg-[#F7F8F5]"
               >
                 Cancel
               </button>
+
               <button
                 onClick={confirmDelete}
-                className="flex-1 rounded-2xl bg-red-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-red-700"
+                className="flex-1 rounded-2xl bg-red-600 px-4 py-3 text-sm font-semibold 
+                text-white transition-all hover:bg-red-700"
               >
                 Delete File
               </button>
+
             </div>
           </div>
         </div>
