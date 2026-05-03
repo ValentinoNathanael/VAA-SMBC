@@ -107,8 +107,8 @@ function UploadPanel({ allowUpload }: { allowUpload: boolean }) {
             <h3 className="mt-5 text-2xl font-semibold text-[#1A4731]">Upload Latest Excel File</h3>
             <p className="mt-2 text-sm leading-6 text-[#4A6A56]">Upload the latest Excel file to directly convert it into data in the system. The uploaded file will be available for preview, visualization, and AI analysis.</p>
           </div>
-          <div className="flex-1 rounded-[24px] border border-[#D4E8C2] bg-[#F7F8F5] p-5">
-            <div className="flex h-full min-h-[250px] flex-col justify-between rounded-[22px] border border-dashed border-[#8DC63F]/50 bg-[#EEF7DC] p-6 text-[#1A4731] shadow-inner">
+          <div className="flex-1 rounded-3xl border border-[#D4E8C2] bg-[#F7F8F5] p-5">
+            <div className="flex h-full min-h-62.5 flex-col justify-between rounded-[22px] border border-dashed border-[#8DC63F]/50 bg-[#EEF7DC] p-6 text-[#1A4731] shadow-inner">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-4">
                   <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-sm">
@@ -122,24 +122,17 @@ function UploadPanel({ allowUpload }: { allowUpload: boolean }) {
               </div>
               <div className="mt-8 flex flex-col gap-4 border-t border-[#1A4731]/10 pt-5 md:flex-row md:items-center md:justify-between">
                 <div className="text-sm">
-      
                   {allowUpload ? (
                     <span className="font-medium text-[#1A4731]">Access granted. You can upload file.</span>
                   ) : (
                     <span className="font-medium text-[#4A6A56]">Upload only for <span className="font-semibold text-[#1A4731]"
                     >Strategic Planning & Operations Control</span>. You can still access file history.</span>
                   )}
-    
                 </div>
                 <label className={["inline-flex cursor-pointer items-center justify-center rounded-full px-6 py-3 text-sm font-semibold shadow-sm transition-all duration-200", !allowUpload || uploading ? "cursor-not-allowed bg-white/60 text-[#4A6A56]/50" : "bg-[#1A4731] text-white hover:-translate-y-0.5 hover:bg-[#15392A] active:scale-95"].join(" ")}>
                   {uploading ? "Uploading..." : "Browse Files"}
-
-
                   <input type="file" className="hidden" accept=".xlsx,.xls" disabled={!allowUpload || uploading} 
                   onChange={handleFileChange} />
-
-
-
                   
                 </label>
               </div>
@@ -319,7 +312,6 @@ function HistoryPanel({ role }: { role: UserRole | null }) {
               </svg>
               <span className="text-sm font-semibold text-[#1A4731]">{deleteModal.name}</span>
             </div>
-
             <div className="flex gap-3">
 
               <button
@@ -329,7 +321,6 @@ function HistoryPanel({ role }: { role: UserRole | null }) {
               >
                 Cancel
               </button>
-
               <button
                 onClick={confirmDelete}
                 className="flex-1 rounded-2xl bg-red-600 px-4 py-3 text-sm font-semibold 

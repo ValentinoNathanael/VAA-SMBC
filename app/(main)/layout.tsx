@@ -14,9 +14,6 @@ import {
     ChevronLeft,
 } from "lucide-react";
 
-
-
-
 const MENUS = [
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { label: "Data Management", href: "/data-management", icon: FolderOpen },

@@ -100,10 +100,14 @@ async function runQualityCheck(objectKey: string, fileName: string, fileId: stri
     const filteredIssues = issues.filter((issue: any) =>
       issue.value &&
       issue.value.trim() !== "" &&
+      !issue.value.toLowerCase().includes("hardware") &&
+      !issue.value.toLowerCase().includes("software") &&
       !issue.reason?.toLowerCase().includes("kosong") &&
       !issue.reason?.toLowerCase().includes("empty") &&
       !issue.reason?.toLowerCase().includes("null")
     );
+
+    
 
     for (const issue of filteredIssues) {
       await pool.query(

@@ -21,7 +21,7 @@ type ChatHistoryItem = {
 
 const COLLAPSE_LIMIT = 3;
 
-// ini buat yang ganti berapa lama dia ilang 
+// Bagian Chat history untuk waktu chatnya hilang (20 second)
 const EXPIRY_MINUTES = 20 / 60;
 
 // ===== DETEKSI FORMAT =====
@@ -311,7 +311,7 @@ export default function ChatHistoryPage() {
     fetchFiles();
     fetchChatHistory();
 
-    // Auto-refresh setiap 30 detik untuk hapus yang sudah expired
+    // Auto-refresh setiap 10 detik untuk hapus yang sudah expired
     const interval = setInterval(fetchChatHistory, 10000);
     return () => clearInterval(interval);
   }, []);

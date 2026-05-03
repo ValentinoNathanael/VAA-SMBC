@@ -408,10 +408,7 @@ export default function DataPreviewPage() {
                         ? `Rp ${Number(raw).toLocaleString("id-ID")}`
                         : String(raw ?? "");
                     const isStatus = c.toLowerCase() === "status";
-
-
                     const isActive = val.toLowerCase() === "active";
-
                     return (
                       <td
                         key={c}
@@ -486,7 +483,6 @@ export default function DataPreviewPage() {
           )}
         </div>
       </div>
-
       {!rows.length && meta.fileId && (
         <p className="mt-3 text-sm" style={{ color: "#4A6A56" }}>
           No data to display.

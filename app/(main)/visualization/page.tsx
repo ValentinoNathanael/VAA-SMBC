@@ -26,8 +26,6 @@ const [show, setShow] = useState(false);
 const [files, setFiles] = useState<{id: string, file_name: string}[]>([]);
 const [selectedFileId, setSelectedFileId] = useState<string>("");
 
-
-
 function findCol(cols: string[], ...names: string[]): string | undefined {
   for (const name of names) {
     const found = cols.find(c => c.trim().toLowerCase() === name.toLowerCase());
@@ -273,7 +271,6 @@ return (
               loadPreviewData(e.target.value);
             }}
 
-
             style={{
               background: "#F7F8F5", border: "1px solid #D4E8C2",
               borderRadius: 10, padding: "6px 12px",
@@ -388,10 +385,8 @@ return (
             >
               <X size={12} /> Reset Chart
             </button>
-  
             )}
           </div>
-
       {hueCols.length > 0 && barKeys.length > 20 && (
         <div style={{ 
           color: "#92400E", 
@@ -409,9 +404,7 @@ return (
           <span>Comparison Column produces <strong>{barKeys.length} unique categories</strong> — the chart may be hard to read. It is recommended to select a column with fewer values (e.g., Status, LOB, Deployment Type).</span>
         </div>
       )}
-
         </div>
-
         {show && (
           <div className="mt-8 rounded-2xl bg-white p-5 shadow-sm" style={{ border: "1px solid #D4E8C2" }}>
             <div className="mb-4">
@@ -443,11 +436,9 @@ return (
                 <BarChart data={chartDataWithTotal} margin={{ top: 32, right: 20, left: 0, bottom: 40 }}>
           
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-
                   <XAxis dataKey="x" tick={{ fill: "#111", fontSize: 12 }} 
                   tickFormatter={v => shortenLabel(makeXTickLabelFromFull(String(v)), 14)} 
                   interval={0} angle={-15} textAnchor="end" height={70} />
-
 
                   <Customized component={(props: any) => {
                     const { xAxisMap, height } = props;
@@ -474,8 +465,6 @@ return (
                   }} />
             
                   <YAxis tick={{ fill: "#111" }} />
-
-
                   <Tooltip
                     contentStyle={{ backgroundColor: "#fff", border: "1px solid #e5e7eb", borderRadius: "12px", color: "#111" }}
                     labelStyle={{ color: "#111", fontWeight: 600 }}
@@ -489,7 +478,6 @@ return (
             
                   {barKeys.map(k => <Bar key={k} dataKey={k} stackId={hueCols.length ? "a" : undefined} 
                   fill={stringToColor(k)} radius={[4, 4, 0, 0]} />)}
-
               
                   <Bar dataKey="_total" stackId="__label__" fill="transparent" stroke="none" legendType="none" isAnimationActive={false}
                     label={(props: any) => {

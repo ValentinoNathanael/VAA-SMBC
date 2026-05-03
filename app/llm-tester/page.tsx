@@ -21,7 +21,7 @@ type DebugInfo = {
   intent: string;
   engineSummary: string;
   reasoning: string;
-  filterContext: string;
+
 };
 
 function AccessDenied() {
@@ -188,7 +188,7 @@ useEffect(() => {
           intent: json.intent || "-",
           engineSummary: json.engineSummary || "-",
           reasoning: json.reasoning || "-",
-          filterContext: json.filterContext || "-",
+          
         });
       } else {
         setAnswer(json.error || "Terjadi error.");
@@ -361,7 +361,6 @@ async function handleVerdict(verdict: "pass" | "fail") {
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 10 }}>
                   {[
                     { label: "Intent / Operation", value: debugInfo.intent },
-                    { label: "Filter Context", value: debugInfo.filterContext },
                     { label: "Reasoning LLM", value: debugInfo.reasoning },
                     { label: "Engine Summary", value: debugInfo.engineSummary },
                   ].map((item, i) => (

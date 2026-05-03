@@ -12,15 +12,9 @@ const steps = [
   { title: "Ask AI", desc: "Find information from Excel files with AI assistance", icon: Bot, num: "04", href: "/ask-ai" },
 ];
 
-
-
 export default async function DashboardPage() {
   const role = await getRole();
   const username = await getUsername();
-
-  {/* Tengah — Greeting + Clock */}
-  <GreetingClock role={role} username={username} />
-
   let loginHistory: any[] = [];
   if (role === "spoc") {
   const result = await pool.query(
@@ -43,34 +37,24 @@ export default async function DashboardPage() {
     >
       {/* Main Content */}
       <div style={{ width: "100%" }}>
-
-        {/* Hero Section — 3 kolom: teks | greeting+clock | stats */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr auto auto", gap: 24, alignItems: "center", marginBottom: 28 }}>
-
-          {/* Kiri — Hero Text */}
           <div>
             <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "#8DC63F", marginBottom: 8, display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ display: "inline-block", width: 18, height: 2, background: "#8DC63F", borderRadius: 2 }} />
               AI Assistant
             </div>
-
             <h1 style={{ fontSize: 40, fontWeight: 400, lineHeight: 1.1, color: "#1A4731", margin: "0 0 12px", letterSpacing: "-0.01em", fontFamily: "inherit" }}>
               Welcome to{" "}
               <em style={{ fontStyle: "italic", color: "#8DC63F" }}>VAA</em>
               <br />
               Dashboard
             </h1>
-
             <p style={{ fontSize: 13.5, color: "#4A6A56", lineHeight: 1.7, maxWidth: 460, margin: 0 }}>
               Use this dashboard to initiate the upload process, view data, open
               visualizations, and search for information from Excel files using AI.
             </p>
           </div>
-
-
-
-
-          {/* Kanan — Stats */}
+          <GreetingClock role={role} username={username} />
           <div style={{ display: "flex", flexDirection: "column", gap: 12, minWidth: 168 }}>
             {[
               { num: role === "internal" ? "2" : "4", lbl: "Features" },
@@ -169,7 +153,6 @@ export default async function DashboardPage() {
           </div>
         </div>
       )}
-
       </div>
     </div>
   );

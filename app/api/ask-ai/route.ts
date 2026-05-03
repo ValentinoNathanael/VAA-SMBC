@@ -94,6 +94,30 @@ PANDUAN OPERASI:
   Contoh: "vendor Jenius" → operation: "lookup", entity: "Jenius", file: null, column: null
   Contoh: "vendor aplikasi BTPN" → operation: "lookup", entity: "BTPN", file: null, column: null
   Contoh: "hostname server Jago" → operation: "lookup", entity: "Jago", file: null, column: null
+  - Jika user menyebut kolom spesifik berikut → WAJIB gunakan file: "template_activo.xlsx"
+  Kolom unik activo: "asset code", "asset name", "invoice number", "serial number",
+  "nomor kontrak", "tipe lisensi", "masa garansi", "tanggal kedaluwarsa kontrak",
+  "harga perolehan", "nilai depresiasi", "custodian", "pemilik aset",
+  "mac address", "alamat ip", "ip address", "kapasitas/limit",
+  "pengguna aset", "versi software aset", "tanggal pembelian aset"
+  Contoh: "asset code Jenius" → operation: "lookup", entity: "Jenius", file: "template_activo.xlsx"
+  Contoh: "nomor kontrak App_ID001" → operation: "lookup", entity: "App_ID001", file: "template_activo.xlsx"
+  Contoh: "custodian Jenius" → operation: "lookup", entity: "Jenius", file: "template_activo.xlsx"
+
+- Jika user menyebut kolom spesifik berikut → WAJIB gunakan file: "template_server.xlsx"
+  Kolom unik server: "OS EOL", "DB EOL", "power state", "lokasi DRC",
+  "lokasi disaster recovery", "spesifikasi hardware DC", "spesifikasi software DC",
+  "spesifikasi hardware DRC", "spesifikasi software DRC", "tahun implementasi server"
+  Contoh: "OS EOL Jenius" → operation: "lookup", entity: "Jenius", file: "template_server.xlsx"
+  Contoh: "power state App_ID001" → operation: "lookup", entity: "App_ID001", file: "template_server.xlsx"
+
+- Jika user menyebut kolom spesifik berikut → WAJIB gunakan file: "template_aplikasi.xlsx"
+  Kolom unik aplikasi: "development type", "IT architect", "perizinan cloud",
+  "TimeQH", "cost driver", "catagory OJK", "kategori OJK",
+  "capability layer", "subcapability"
+  Contoh: "development type Jenius" → operation: "lookup", entity: "Jenius", file: "template_aplikasi.xlsx"
+  Contoh: "perizinan cloud BTPN" → operation: "lookup", entity: "BTPN", file: "template_aplikasi.xlsx"
+
 - Jika user menyebut nama hardware/perangkat/aset spesifik (contoh: "Server Lenovo ThinkSystem", "Backup Appliance HPE", "Network Switch Cisco", "Lisensi Windows") → gunakan operation: "filter", file: "template_activo.xlsx", column: "asset name"
   JANGAN gunakan "lookup" untuk kasus ini karena filter akan otomatis join ke nama aplikasi
 - "general" → pertanyaan umum yang butuh analisis LLM
@@ -132,7 +156,11 @@ PENTING:
 - Jika pertanyaan mengandung "info lengkap", "detail", "semua data", "semua info" → SELALU gunakan "lookup", meskipun ada kata "biaya" atau "cost"
 - Untuk pertanyaan "application type", gunakan file template_aplikasi.xlsx kolom "Application TYpe"
 - JANGAN gunakan template_activo.xlsx untuk pertanyaan tentang tipe aplikasi
-- Untuk pertanyaan tentang atribut spesifik suatu aplikasi (vendor, hostname, owner, lokasi, dll) yang menyebut nama aplikasi → SELALU gunakan "lookup" dengan entity diisi nama aplikasinya, file: null, column: null. Gunakan lookup HANYA kalau ada nama aplikasi/entity spesifik yang disebutkan.
+- Untuk pertanyaan tentang atribut spesifik suatu aplikasi (vendor, owner, lokasi, dll) yang menyebut nama aplikasi → SELALU gunakan "lookup" dengan entity diisi nama aplikasinya, file: null, column: null. Gunakan lookup HANYA kalau ada nama aplikasi/entity spesifik yang disebutkan.
+- KECUALI jika atribut yang ditanya adalah kolom unik file tertentu, gunakan file spesifik:
+  "hostname", "host name", "OS EOL", "DB EOL", "power state", "lokasi DRC" → file: "template_server.xlsx"
+  "asset code", "asset name", "serial number", "custodian", "masa garansi" → file: "template_activo.xlsx"
+  "development type", "IT architect", "perizinan cloud", "TimeQH" → file: "template_aplikasi.xlsx"
 - Jika user menyebut kata kunci yang tidak persis sama dengan nama kolom di schema → cari kolom yang paling relevan berdasarkan konteks dan schema yang tersedia. Jangan gagal hanya karena nama kolom tidak persis sama dengan yang disebutkan user.
 
 PENTING UNTUK KONDISI "BUKAN/TIDAK/SELAIN" (NOT):
@@ -283,6 +311,22 @@ HIERARKI PRIORITAS UNTUK KOLOM AMBIGU:
 - Kata "deployment" tanpa "type" → tetap merujuk ke kolom "Deployment_type" di template_aplikasi.xlsx, BUKAN template_server.xlsx
   Contoh: "deployment cloud" → column: "Deployment_type", file: "template_aplikasi.xlsx", value: "Cloud"
   Contoh: "deployment on-premise" → column: "Deployment_type", file: "template_aplikasi.xlsx", value: "On-Premise"
+- Kata "OS EOL" atau "DB EOL" → template_server.xlsx
+- Kata "hostname" atau "host name" → WAJIB file: "template_server.xlsx", JANGAN gunakan file: null
+- Kata "power state" → template_server.xlsx kolom "Power State"
+- Kata "lokasi DRC" atau "disaster recovery" → template_server.xlsx kolom "Lokasi disaster recovery center"
+- Kata "tahun implementasi" → template_server.xlsx kolom "Tahun Implementasi"
+- Kata "custodian" atau "pemilik aset" → template_activo.xlsx kolom "Pemilik Aset (Custodian)"
+- Kata "development type" → template_aplikasi.xlsx kolom "Development_type"
+- Kata "IT architect" → template_aplikasi.xlsx kolom "IT Architect"
+- Kata "perizinan cloud" → template_aplikasi.xlsx kolom "Perizinan cloud"
+- Kata "TimeQH" → template_aplikasi.xlsx kolom "TimeQH"
+- Kata "cost driver" → template_aplikasi.xlsx kolom "Cost Driver"
+- Kata "kategori OJK" atau "catagory OJK" → template_aplikasi.xlsx kolom "Catagory OJK"
+- Kata "asset code" atau "asset name" → template_activo.xlsx
+- Kata "nomor kontrak" atau "tipe lisensi" → template_activo.xlsx
+- Kata "harga perolehan" atau "nilai depresiasi" → template_activo.xlsx
+- Kata "mac address" atau "alamat ip" → template_activo.xlsx
 
   `.trim();
 }
@@ -814,6 +858,22 @@ if (topNMatch) {
       (engineResult.totalCount === 0 || engineResult.totalCount === undefined) &&
       (!engineResult.items || engineResult.items.length === 0) &&
       !engineResult.aggregated;
+
+      if (engineResult?.notFound === true) {
+      const availableFiles =
+        allChunks.length > 0
+          ? [...new Set(allChunks.map((c) => c.fileName.split("/").pop() || c.fileName))].join(", ")
+          : "tidak ada file yang diunggah";
+      const answer = `Data yang diminta tidak ditemukan di file Excel yang tersedia (${availableFiles}). Pastikan data sudah diunggah dan tersedia di sistem.`;
+      await saveChatHistory(question, answer, instructions[0]?.operation);
+      return NextResponse.json({
+        success: true,
+        answer,
+        dataIssues: [],
+        intent: instructions[0]?.operation,
+        sources: [],
+      });
+    }
 
     if (isNoData) {
       const availableFiles =

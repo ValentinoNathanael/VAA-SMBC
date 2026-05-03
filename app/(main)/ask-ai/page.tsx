@@ -182,7 +182,6 @@ function parseBiayaAnswer(answer: string): {
   }
 
   // Parse ranking items dari preformattedList
-  // Format: "1. App_ID: X | Nama Aplikasi: Y | Total: Rp Z | Januari: Rp A | ..."
   const rankingItems: { appId: string; name: string; total: string; months: { label: string; value: string }[] }[] = [];
   const lines = answer.split("\n");
   for (const line of lines) {

@@ -7,6 +7,7 @@ export type EngineResult = {
   totalRows?: number;
   items?: any[];
   aggregated?: Record<string, any>;
+  notFound?: boolean;
 };
 
 function normalizeValue(val: any): string {
@@ -222,7 +223,14 @@ const isNot = (instruction as any).logic === "NOT";
       });
     }
   }
-
+    if (filtered.length === 0) {
+    return {
+      summary: `Data tidak ditemukan untuk filter "${value}".`,
+      totalCount: 0,
+      items: [],
+      notFound: true,
+    };
+  }
   const multiRowFiles = allChunks ? detectMultiRowFiles(allChunks) : new Set<string>();
   const appIdPattern = detectAppIdPattern(targetChunks);
 
@@ -394,8 +402,10 @@ function handleSum(
 
 if (value && !entity) {
   const valueList = value.split(",").map(v => v.trim().toLowerCase()).filter(Boolean);
-  const isAppIdList = valueList.length > 1 && valueList.every(v => /^app_id\d+$/i.test(v));
+  const isAppIdList = valueList.length >= 1 && valueList.every(v => /^app_id\d+$/i.test(v));
 
+
+  
   if (isAppIdList) {
     targetChunks = targetChunks.filter(c => {
       const appId = normalizeValue(c.row["App_ID"] || c.row["app_id"]);
@@ -411,6 +421,15 @@ if (value && !entity) {
     }
   }
 }
+
+  if (targetChunks.length === 0) {
+    return {
+      summary: `Data tidak ditemukan untuk "${value || entity}".`,
+      totalCount: 0,
+      items: [],
+      notFound: true,
+    };
+  }
 
   let columnsToSum: string[] = [];
 
@@ -588,6 +607,15 @@ function handleCount(
     return true;
   });
 
+if (unique.length === 0) {
+    return {
+      summary: `Data tidak ditemukan untuk count "${value}".`,
+      totalCount: 0,
+      items: [],
+      notFound: true,
+    };
+  }
+
   return {
     summary: `Total count: ${unique.length} item${value ? ` dengan filter "${value}"` : ""}.`,
     totalCount: unique.length,
@@ -595,19 +623,24 @@ function handleCount(
   };
 }
 
-
-
-
-
 function handleLookup(
   chunks: ExcelChunk[],
   instruction: LLMInstruction,
   allChunks?: ExcelChunk[]
 ): EngineResult {
   const { entity, file, value } = instruction;
+  const column = entity ? null : instruction.column;
   const searchChunks = file
     ? chunks.filter((c) => c.fileName.toLowerCase().includes(file.toLowerCase()))
     : chunks;
+  if (file && searchChunks.length === 0) {
+  return {
+    summary: `File "${file}" tidak ditemukan atau belum diupload.`,
+    totalCount: 0,
+    items: [],
+    notFound: true,
+  };
+}
 
   // ===== FALLBACK: kalau entity null tapi value ada, cari pakai value =====
   const searchTerm = entity || value || "";
@@ -635,7 +668,7 @@ function handleLookup(
   // Kalau entity null tapi value ada → cari di semua kolom
   const isValueFallback = !entity && !!value;
 
-  const filtered = searchChunks.filter((c) => {
+  let filtered = searchChunks.filter((c) => {
     if (isMultiEntity) {
       return entityList.some(ent => {
         const entPatterns = [/^app[_\s-]?id[_\s-]?(\d+)$/i, /^app_id\d+$/i, /^\d+$/];
@@ -662,6 +695,31 @@ function handleLookup(
     }
     return c.searchText.includes(entityNorm);
   });
+
+if (filtered.length === 0 && entity && file && allChunks) {
+  const appIdsFromAll = new Set<string>();
+  for (const chunk of allChunks) {
+    if (chunk.searchText.includes(entityNorm)) {
+      const appId = normalizeValue(chunk.row["App_ID"] || chunk.row["app_id"]);
+      if (appId) appIdsFromAll.add(appId);
+    }
+  }
+  if (appIdsFromAll.size > 0) {
+    filtered.push(...searchChunks.filter(c => {
+      const appId = normalizeValue(c.row["App_ID"] || c.row["app_id"]);
+      return appIdsFromAll.has(appId);
+    }));
+  }
+}
+
+if (filtered.length === 0) {
+    return {
+      summary: `Data tidak ditemukan untuk "${searchTerm}".`,
+      totalCount: 0,
+      items: [],
+      notFound: true,
+    };
+  }
 
   const multiRowFiles = allChunks ? detectMultiRowFiles(allChunks || chunks) : new Set<string>();
   const appIdPattern = detectAppIdPattern(chunks);
@@ -770,6 +828,15 @@ function handleList(
       };
     })
     .filter(Boolean) as Record<string, any>[];
+
+ if (items.length === 0) {
+    return {
+      summary: `Tidak ada data untuk kolom "${column}".`,
+      totalCount: 0,
+      items: [],
+      notFound: true,
+    };
+  }
 
   const colKey = items.length > 0
     ? Object.keys(items[0]).find(k =>
@@ -1093,6 +1160,15 @@ function handleDateFilter(
   if (allChunks && allChunks.length > 0) {
     const multiRowFiles = detectMultiRowFiles(allChunks);
     items = joinByAppId(items, allChunks, multiRowFiles);
+  }
+
+if (items.length === 0) {
+    return {
+      summary: `Data tidak ditemukan untuk filter tanggal "${value}" pada kolom "${column}".`,
+      totalCount: 0,
+      items: [],
+      notFound: true,
+    };
   }
 
   return {
