@@ -432,7 +432,6 @@ export async function POST(req: NextRequest) {
 
     // 2. LLM TAHAP 1 — analisis pertanyaan
     console.log("[LLM Tahap 1] Menganalisis pertanyaan...");
-
     const rawInstructions = await askNovaJSON(buildAnalysisSystemPrompt(schemaMap), question);
     
     const rawList = Array.isArray(rawInstructions) ? rawInstructions : [rawInstructions];
