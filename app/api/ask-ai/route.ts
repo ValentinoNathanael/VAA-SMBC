@@ -129,11 +129,30 @@ PANDUAN OPERASI:
   Contoh: "kontrak yang belum habis" → operation: "date_filter", column: "Tanggal Kedaluwarsa", value: "active"
   Contoh: "aplikasi live setelah 2020" → operation: "date_filter", column: "Date_LIve", value: "after:2020"
   Contoh: "aset dibeli tahun 2024" → operation: "date_filter", column: "Tanggal Pembelian", value: "year:2024"
+  Contoh: "aplikasi decom bulan Mei 2026" → operation: "date_filter", column: "Date_Decom", value: "month:5:2026"
+  Contoh: "aplikasi decom bulan Maret" → operation: "date_filter", column: "Date_Decom", value: "month:3"
+
 - "average" → user minta rata-rata nilai dari suatu kolom
   Contoh: "rata-rata Nilai Depresiasi" → operation: "average", column: "Nilai Depresiasi", file: "template_activo.xlsx"
   Contoh: "rata-rata Harga Perolehan per kategori aset" → operation: "average", column: "Harga Perolehan", file: "template_activo.xlsx", groupBy: "Tipe/Kategori Aset"
   Contoh: "rata-rata biaya OPEX per vendor" → operation: "average", column: null, file: "template_opex.xlsx", groupBy: "vendor"
   Gunakan "groupBy" untuk mengelompokkan rata-rata berdasarkan kategori tertentu
+
+PENTING UNTUK "date_filter" DENGAN KONTEKS DECOM:
+- Jika pertanyaan mengandung kata "decom" atau "decommissioned" bersamaan dengan filter tanggal → generate 2 instruksi BERURUTAN:
+  Step 1: filter status Decommissioned di template_aplikasi.xlsx
+  Step 2: date_filter pada kolom Date_Decom
+  Contoh: "aplikasi yang decom di tahun 2026" →
+  [
+    {"operation": "filter", ...  "value": "Decommissioned"},
+    {"operation": "date_filter", ... "value": "year:2026"}
+  ]
+    Contoh: "aplikasi yang decom bulan Mei 2026" →
+  [
+    {"operation": "filter", "file": "template_aplikasi.xlsx", "column": "Status", "value": "Decommissioned"},
+    {"operation": "date_filter", "file": "template_aplikasi.xlsx", "column": "Date_Decom", "value": "month:5:2026"}
+  ]
+  
 
 PENTING:
 - Gunakan nama file dan kolom PERSIS seperti yang ada di schema
@@ -364,6 +383,35 @@ async function getDBQualityIssues(fileNames: string[]): Promise<any[]> {
   }
 }
 
+function extractMonthValue(question: string): string | null {
+  const BULAN_MAP: Record<string, number> = {
+    januari: 1, februari: 2, maret: 3, april: 4,
+    mei: 5, juni: 6, juli: 7, agustus: 8,
+    september: 9, oktober: 10, november: 11, desember: 12
+  };
+
+  const q = question.toLowerCase();
+
+  // Ekstrak tahun dulu (cari 4 digit angka)
+  const yearMatch = q.match(/\b(20\d{2})\b/);
+  const year = yearMatch ? yearMatch[1] : null;
+
+  // Ekstrak bulan — nama atau angka
+  const monthMatch = q.match(
+    /\b(januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember|\d{1,2})\b.*?(?:bulan|month)?/
+  ) || q.match(
+    /bulan\s+(?:ke-?)?(\d{1,2}|januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember)/
+  );
+
+  if (!monthMatch) return null;
+
+  const raw = monthMatch[1];
+  const month = isNaN(Number(raw)) ? BULAN_MAP[raw] : parseInt(raw);
+  if (!month || month < 1 || month > 12) return null;
+
+  return year ? `month:${month}:${year}` : `month:${month}`;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -398,6 +446,18 @@ export async function POST(req: NextRequest) {
     const nonSumInstructions = rawList.filter((i: any) => i.operation !== "sum" && i.operation !== "general");
 
     let instructions = rawList;
+
+    const monthValue = extractMonthValue(question);
+    if (monthValue) {
+      instructions = instructions.map((i: any) => {
+        if (i.operation === "date_filter" && 
+            (i.column?.toLowerCase().includes("decom") || i.column?.toLowerCase().includes("live"))) {
+          return { ...i, value: monthValue };
+        }
+        return i;
+      });
+      console.log("[MonthOverride] Paksa override month value:", monthValue);
+    }
 
     if (isInfoRequest) {
       const entity = rawList.find((i: any) => i.entity)?.entity || null;

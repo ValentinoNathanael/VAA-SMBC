@@ -132,7 +132,6 @@ export function formatSchemaForLLM(schemaMap: SchemaMap): string {
           return `  - ${col.name} (${col.type})${hintText}${samples ? `: contoh → ${samples}` : ""}`;
         })
         .join("\n");
-
       return `FILE: ${fileSchema.fileName} (${fileSchema.rowCount} rows)\nKOLOM:\n${colDetails}`;
     })
     .join("\n\n");

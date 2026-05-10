@@ -123,6 +123,7 @@ export default function LLMTesterPage() {
   const [note, setNote] = useState("");
   const [results, setResults] = useState<TestResult[]>([]);
   const [activeTab, setActiveTab] = useState<"tester" | "history">("tester");
+  const [username, setUsername] = useState<string | null>(null);
 
 useEffect(() => {
   async function checkRole() {
@@ -130,6 +131,7 @@ useEffect(() => {
       const res = await fetch("/api/auth/me");
       const data = await res.json();
       setRole(data.role || null);
+      setUsername(data.username || null);
     } catch {
       setRole(null);
     } finally {
@@ -211,7 +213,7 @@ async function handleVerdict(verdict: "pass" | "fail") {
       engineSummary: debugInfo?.engineSummary || "-",
       reasoning: debugInfo?.reasoning || "-",
       verdict, note,
-      username: role === "spoc" ? "spoc" : "internal",
+      username: username || "spoc",
     }),
   });
 

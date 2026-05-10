@@ -1110,6 +1110,14 @@ function handleDateFilter(
     if (val.startsWith("before:")) return date.getFullYear() < parseInt(val.split(":")[1]);
     if (val.startsWith("after:")) return date.getFullYear() > parseInt(val.split(":")[1]);
     if (val.startsWith("year:")) return date.getFullYear() === parseInt(val.split(":")[1]);
+    if (val.startsWith("month:")) {
+      const match = val.match(/month:(\d+)(?::(\d+))?/);
+      if (!match) return false;
+      const month = parseInt(match[1]);
+      const year = match[2] ? parseInt(match[2]) : null;
+      const monthMatch = date.getMonth() + 1 === month;
+      return year ? monthMatch && date.getFullYear() === year : monthMatch;
+    }
     return false;
   }
 
@@ -1249,7 +1257,6 @@ export function executeInstruction(
   allChunks?: ExcelChunk[]
 ): EngineResult {
   console.log("[Engine] Executing instruction:", instruction);
-
   switch (instruction.operation) {
     case "filter":
       return handleFilter(chunks, instruction, allChunks);
@@ -1265,7 +1272,7 @@ export function executeInstruction(
       return handleMostFrequent(chunks, instruction);
     case "date_filter":
       return handleDateFilter(chunks, instruction, allChunks);
-    case "average":                                          // ← TAMBAH DI SINI
+    case "average":                                          
       return handleAverage(chunks, instruction, allChunks);
     case "general":
     default:

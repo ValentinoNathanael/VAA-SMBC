@@ -6,6 +6,6 @@ export async function GET() {
   const c = await cookies();
   const role = c.get(ROLE_COOKIE)?.value ?? null;
   const username = c.get("vaa_username")?.value ?? null;
-  return NextResponse.json({ role });
+  return NextResponse.json({ role, username  });
 }
 
