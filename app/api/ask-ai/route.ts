@@ -120,6 +120,8 @@ PANDUAN OPERASI:
 
 - Jika user menyebut nama hardware/perangkat/aset spesifik (contoh: "Server Lenovo ThinkSystem", "Backup Appliance HPE", "Network Switch Cisco", "Lisensi Windows") → gunakan operation: "filter", file: "template_activo.xlsx", column: "asset name"
   JANGAN gunakan "lookup" untuk kasus ini karena filter akan otomatis join ke nama aplikasi
+- Jika user menyebut merk/model spesifik (contoh: "Canon imageRUNNER 2625", "Dell PowerEdge", "HPE", "Cisco") → gunakan operation: "filter", file: "template_activo.xlsx", column: "Model & Merk"
+- Jika user menyebut nama aset umum (contoh: "Server Dell", "Aplikasi Antivirus", "Lisensi Windows") → gunakan operation: "filter", file: "template_activo.xlsx", column: "asset name"
 - "general" → pertanyaan umum yang butuh analisis LLM
 - "most_frequent" → user minta nilai yang paling banyak/sering muncul dari suatu kolom
   Contoh: "vendor paling banyak?" → operation: "most_frequent", column: "vendor", file: "template_opex.xlsx"

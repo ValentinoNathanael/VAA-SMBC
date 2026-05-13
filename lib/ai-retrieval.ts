@@ -61,6 +61,33 @@ const SYNONYMS: Record<string, string[]> = {
   // Asset
   aset: ["asset", "asset code", "asset name", "activo"],
   invoice: ["invoice number", "faktur", "inv"],
+  merk: ["model & merk", "model", "brand", "merek", "tipe"],
+  model: ["model & merk", "merk", "brand", "tipe aset"],
+  kapasitas: ["kapasitas/limit", "limit", "kapasitas"],
+  masagaransi: ["masa garansi", "garansi"],
+  kedaluwarsa: ["tanggal kedaluwarsa", "expired", "kadaluarsa"],
+  nilaidepresiasi: ["nilai depresiasi", "depresiasi"],
+  nomorcontrak: ["nomor kontrak", "kontrak"],
+  tipelisensi: ["tipe lisensi", "lisensi"],
+  statusaset: ["status aset", "kondisi aset"],
+  lokasifisik: ["lokasi fisik", "lokasi aset"],
+  custodian: ["pemilik aset (custodian)", "custodian", "pemilik aset"],
+
+// Aplikasi 
+  appowner: ["app owner", "pemilik aplikasi", "owner aplikasi"],
+  appmanager: ["app manager", "manager aplikasi"],
+  rto: ["rto", "recovery time objective"],
+  rpo: ["rpo", "recovery point objective"],
+  capability: ["capability layer", "capability", "subcapability"],
+
+// Server 
+  hostname: ["host name", "hostname", "nama server"],
+  powerstate: ["power state", "kondisi server", "state server"],
+  oseoL: ["os eol", "end of life os", "eol os"],
+  dbeol: ["db eol", "end of life db", "eol db"],
+
+// Opex 
+  deskripsi: ["description", "desc", "keterangan"],
 
   // Waktu
   tanggal: ["date", "tgl", "time", "waktu", "date_live", "date_decom", "tahun implementasi"],

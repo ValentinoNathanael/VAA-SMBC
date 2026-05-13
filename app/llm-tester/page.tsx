@@ -132,23 +132,10 @@ useEffect(() => {
       const data = await res.json();
       setRole(data.role || null);
       setUsername(data.username || null);
-    } catch {
-      setRole(null);
-    } finally {
-      setRoleLoaded(true);
-    }
-  }
 
-  checkRole();
-  window.addEventListener("focus", checkRole);
-  return () => window.removeEventListener("focus", checkRole);
-}, []);
-
-useEffect(() => {
-  fetch("/api/llm-tester")
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) setResults(data.data.map((r: any) => ({
+      const histRes = await fetch("/api/llm-tester");
+      const histData = await histRes.json();
+      if (histData.success) setResults(histData.data.map((r: any) => ({
         id: r.id,
         question: r.question,
         answer: r.answer,
@@ -164,8 +151,19 @@ useEffect(() => {
           return `${date}, ${time}`;
         })(),
       })));
-    });
+    } catch {
+      setRole(null);
+    } finally {
+      setRoleLoaded(true);
+    }
+  }
+
+  checkRole();
+  window.addEventListener("focus", checkRole);
+  return () => window.removeEventListener("focus", checkRole);
 }, []);
+
+
 
   async function handleTest() {
     if (!question.trim() || loading) return;
